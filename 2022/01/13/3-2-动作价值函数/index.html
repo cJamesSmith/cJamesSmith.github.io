@@ -20,19 +20,22 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="强化学习（RL）不同于监督学习和无监督学习。一方面，它使用许多成熟的监督学习方法，如用于函数逼近的深度神经网络、随机梯度下降和反向传播，来学习数据表示。另一方面，RL通常以不同的方式应用它们。">
+  <meta name="description" content="之前介绍的Bellman方程实际上是状态价值函数，$V(s)$。除此之外我们还可以定义动作价值函数$Q(s, a)$，即在状态s执行动作a所获得的总奖励，$Q(s, a)$可以通过$V(s)$来定义，同时也是Q-learning的基础。我们的主要目标是获得每对state和action的Q值。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="1.1 强化学习简介">
-<meta property="og:url" content="http://example.com/2022/01/13/1-1-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%80%E4%BB%8B/index.html">
+<meta property="og:title" content="3.2 动作价值函数">
+<meta property="og:url" content="http://example.com/2022/01/13/3-2-%E5%8A%A8%E4%BD%9C%E4%BB%B7%E5%80%BC%E5%87%BD%E6%95%B0/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="强化学习（RL）不同于监督学习和无监督学习。一方面，它使用许多成熟的监督学习方法，如用于函数逼近的深度神经网络、随机梯度下降和反向传播，来学习数据表示。另一方面，RL通常以不同的方式应用它们。">
+<meta property="og:description" content="之前介绍的Bellman方程实际上是状态价值函数，$V(s)$。除此之外我们还可以定义动作价值函数$Q(s, a)$，即在状态s执行动作a所获得的总奖励，$Q(s, a)$可以通过$V(s)$来定义，同时也是Q-learning的基础。我们的主要目标是获得每对state和action的Q值。">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-01-13T06:30:52.000Z">
-<meta property="article:modified_time" content="2022-01-13T07:29:16.474Z">
+<meta property="og:image" content="http://example.com/2022/01/13/3-2-%E5%8A%A8%E4%BD%9C%E4%BB%B7%E5%80%BC%E5%87%BD%E6%95%B0/13286520737398272.png">
+<meta property="og:image" content="http://example.com/2022/01/13/3-2-%E5%8A%A8%E4%BD%9C%E4%BB%B7%E5%80%BC%E5%87%BD%E6%95%B0/13286520777517603.png">
+<meta property="article:published_time" content="2022-01-13T07:38:51.000Z">
+<meta property="article:modified_time" content="2022-01-13T07:41:45.930Z">
 <meta property="article:author" content="cxw">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/01/13/3-2-%E5%8A%A8%E4%BD%9C%E4%BB%B7%E5%80%BC%E5%87%BD%E6%95%B0/13286520737398272.png">
 
-<link rel="canonical" href="http://example.com/2022/01/13/1-1-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%80%E4%BB%8B/">
+<link rel="canonical" href="http://example.com/2022/01/13/3-2-%E5%8A%A8%E4%BD%9C%E4%BB%B7%E5%80%BC%E5%87%BD%E6%95%B0/">
 
 
 <script id="page-configurations">
@@ -45,7 +48,7 @@
   };
 </script>
 
-  <title>1.1 强化学习简介 | Hexo</title>
+  <title>3.2 动作价值函数 | Hexo</title>
   
 
 
@@ -150,7 +153,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/1-1-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%80%E4%BB%8B/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/3-2-%E5%8A%A8%E4%BD%9C%E4%BB%B7%E5%80%BC%E5%87%BD%E6%95%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -163,7 +166,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          1.1 强化学习简介
+          3.2 动作价值函数
         </h1>
 
         <div class="post-meta">
@@ -174,7 +177,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-01-13 14:30:52 / Modified: 15:29:16" itemprop="dateCreated datePublished" datetime="2022-01-13T14:30:52+08:00">2022-01-13</time>
+              <time title="Created: 2022-01-13 15:38:51 / Modified: 15:41:45" itemprop="dateCreated datePublished" datetime="2022-01-13T15:38:51+08:00">2022-01-13</time>
             </span>
 
           
@@ -188,18 +191,25 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>﻿强化学习（RL）不同于监督学习和无监督学习。一方面，它使用许多成熟的监督学习方法，如用于函数逼近的深度神经网络、随机梯度下降和反向传播，来学习数据表示。另一方面，RL通常以不同的方式应用它们。</p>
+        <p>﻿﻿之前介绍的Bellman方程实际上是状态价值函数，$V(s)$。除此之外我们还可以定义动作价值函数$Q(s, a)$，即在状态s执行动作a所获得的总奖励，$Q(s, a)$可以通过$V(s)$来定义，同时也是Q-learning的基础。我们的主要目标是获得每对state和action的Q值。</p>
 <span id="more"></span>
-<p>在接下来两部分中，我们将探讨RL方法的具体细节，包括严格数学形式的假设和抽象。首先，将RL与有监督和无监督学习进行比较。</p>
-<p>假设有一个<strong>智能体</strong>需要在<strong>环境</strong>中执行<strong>动作</strong>。迷宫中的小鼠就是一个很好的例子，</p>
-<p>在这种情况下，环境是一个迷宫，有些地方有食物，有些地方有电。小鼠可以执行诸如向左/向右转弯和向前移动等操作。在每一时刻，它都可以观察迷宫的完整状态，从而决定要采取的行动。小鼠试图找到尽可能多的食物，同时尽可能避免触电。这些食物和电信号作为环境给予智能体（小鼠）的<strong>奖励</strong>，作为智能体行为的额外反馈。奖励在RL中是一个非常重要的概念，我们将在后面讨论它。现在，你只要知道智能体的最终目标是获得尽可能多的总奖励就足够了。在我们的例子中，可能出现这样的情况：小鼠可能会遭受轻微电击，但是之后会到达食物充足的地方。对于RL来说，这是一个更好的结果，而不仅仅是静止不动，一无所获。 </p>
-<p>我们不想把关于环境的知识和在每种特定情况下要采取的最佳行动强行编码到小鼠的大脑中，这将花费太多的精力，即使稍微改变迷宫，我们的先验知识也可能变得无用。我们想要的是有一套神奇的方法，让小鼠能够自己学习如何避免被电，并尽可能多地收集食物。RL正是这个神奇的工具箱，它的行为不同于有监督和无监督的学习方法；它不像监督学习那样使用预定义的标签。没有人给小鼠看到的所有图像贴上好的或坏的标签，也没有人给它提供最佳的方向。 </p>
-<p>然而，我们并不是完全盲目的，因为在无监督的学习环境中，我们有一个奖励系统。收集食物的奖励可以是正的，电击的奖励可以是负的，或者在没有什么特别的事情发生时是0。通过观察奖励并将其与所采取的行动联系起来，我们的智能体学会了如何更好地执行一项行动，收集更多的食物，减少电击。</p>
-<p>我们要考虑一些问题：</p>
-<p>首先要注意的是，RL中的观测取决于智能体的行为，在某种程度上，它是这种行为的结果。如果智能体决定做一些低效的事情，那么观测结果不会告诉它做错了什么，以及应该做些什么来改善结果（智能体只会一直得到负面反馈，如负的奖励）。如果智能体很固执并且不断犯错误，那么观测结果会给人一种错误的印象，即没有办法获得更大的奖励，仿佛智能体的日子过得很艰难一样。<br>在机器学习术语中，这个问题可以重新表述为具有非i.i.d.数据。缩写i.i.d.代表独立同分布，这是大多数监督学习方法的要求。</p>
-<p>使智能体的复杂化的第二件事是，它不仅需要利用它所学到的知识，还需要积极探索环境，因为也许做不同的事情会显著改善结果。问题是，过分的探索也可能会严重降低奖励（更不用说智能体会忘记以前学到的东西），因此我们需要在这两种行为（利用原有知识/探索新环境）之间找到某种平衡。人们生活中也总是面临着这样的选择——我应该去一个已经出名的地方吃饭，还是去一家新开的高档餐厅？我应该多久换一次工作？我应该学习一个新的领域还是继续在我的领域工作？这些问题没有普遍的答案。</p>
-<p>第三个复杂因素是，在采取行动后，获得奖励的时间可能严重滞后。例如，在象棋比赛中，一个微妙的动作可以改变整个比赛的局势。在学习过程中，我们需要发现这样的因果关系，但是时间一长，这种因果关系是很难辨别的。 </p>
-<p>然而，尽管存在这些障碍和复杂因素，RL近年来取得了巨大的进步，并且作为一个研究和实际应用领域变得越来越活跃。 </p>
+<script type="math/tex; mode=display">
+Q\left( s,a \right) =\mathbb{E}_{s'\sim S}\left[ r\left( s,a \right) +\gamma V\left( s' \right) \right] =\sum_{s'\in S}{p_{a,s\rightarrow s'}\left( r\left( s,a \right) +\gamma V\left( s' \right) \right)}</script><p>根据状态价值函数的定义我们可以用$Q(s, a)$表示$V(s)$</p>
+<script type="math/tex; mode=display">
+V(s)=\max_{a\in A}Q(s,a)</script><p>同时我们也可得到$Q(s, a)$的递推式，在DQN中有用</p>
+<script type="math/tex; mode=display">
+Q(s,a)=r(s,a)+\gamma\max_{a'\in A}Q(s',a')</script><p>$(s,a)$和$(s’,a’)$从形式上来看是一样的，但表达的含义不同，前者表示的是已经发生的事情，即在状态$s$采取动作$a$，而后者表示的是还未发生的事情，即，为了到状态$s’$而采取动作$a’$，二者在具体实现上也有较大区别。</p>
+<p>下面举一个类似于<a target="_blank" rel="noopener" href="https://gym.openai.com/envs/FrozenLake-v0/">FrozenLake</a>的网格地图例子。初始状态$s_0$，上下左右分别为四个目标状态$s_1,s_2,s_3,s_4$，并带有不同的奖励。</p>
+<p><img src="/2022/01/13/3-2-%E5%8A%A8%E4%BD%9C%E4%BB%B7%E5%80%BC%E5%87%BD%E6%95%B0/13286520737398272.png" alt="13286520737398272"></p>
+<p>这个环境是非确定性环境，即作出一个动作后有33%的概率动作成功执行，33%的概率向指定动作左边的动作移动，33%的概率向指定动作右边的动作移动。为了简单起见，取折扣因子为$\gamma=1$</p>
+<p><img src="/2022/01/13/3-2-%E5%8A%A8%E4%BD%9C%E4%BB%B7%E5%80%BC%E5%87%BD%E6%95%B0/13286520777517603.png" alt="13286520777517603"></p>
+<p>先计算动作价值。假设末状态$s_1,s_2,s_3,s_4$没有后续状态，所以这些状态的Q值都是0。因此$V_1 = 1, V_2 = 2, V_3 = 3, V_4 = 4$。</p>
+<script type="math/tex; mode=display">
+Q(s_0,向上)=0.33\cdot V_1+0.33\cdot V_2+0.33 \cdot V_4 = 0.33\cdot 1+0.33 \cdot 2 + 0.33 \cdot 4=2.31</script><script type="math/tex; mode=display">
+Q(s_0,向左)=0.33\cdot V_1+0.33\cdot V_2+0.33 \cdot V_3 = 0.33\cdot 1+0.33 \cdot 2 + 0.33 \cdot 3=1.98</script><script type="math/tex; mode=display">
+Q(s_0,向右)=0.33\cdot V_4+0.33\cdot V_1+0.33 \cdot V_3 = 0.33\cdot 4+0.33 \cdot 1 + 0.33 \cdot 3=2.64</script><script type="math/tex; mode=display">
+Q(s_0,向下)=0.33\cdot V_3+0.33\cdot V_2+0.33 \cdot V_4 = 0.33\cdot 3+0.33 \cdot 2 + 0.33 \cdot 4=2.97</script><p>状态$s_0$的价值是这些动作价值的最大值，即$2.97$。</p>
+<p>Q值非常实用，对于agent来说，基于Q做出行动决定要比基于V简单得多。在Q的情况下，根据状态选择行动，agent只需要计算当前状态下所有可用动作的Q值，并选择Q值最大的动作。如果使用V值做同样的操作，agent不仅需要知道价值，还需要知道转移的概率，而我们很少有这方面的先验知识，agent需要估计每个动作和状态对的转移概率。说是说的简单，我们仍然缺少一个重要的东西：计算V和Q的一般方法。</p>
 
     </div>
 
@@ -214,10 +224,13 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2022/01/13/1-2-%E9%83%A8%E5%88%86%E5%90%8D%E8%AF%8D%E5%AE%9A%E4%B9%89/" rel="next" title="1.2 部分名词定义">
-      1.2 部分名词定义 <i class="fa fa-chevron-right"></i>
+    <a href="/2022/01/13/3-1-%E8%B4%9D%E5%B0%94%E6%9B%BC%EF%BC%88bellman%EF%BC%89%E6%96%B9%E7%A8%8B/" rel="prev" title="3.1 贝尔曼（bellman）方程">
+      <i class="fa fa-chevron-left"></i> 3.1 贝尔曼（bellman）方程
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/01/13/3-3-%E4%BB%B7%E5%80%BC%E8%BF%AD%E4%BB%A3%EF%BC%88value-iteration%EF%BC%89%E7%AE%97%E6%B3%95/" rel="next" title="3.3 价值迭代（value iteration）算法">
+      3.3 价值迭代（value iteration）算法 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>

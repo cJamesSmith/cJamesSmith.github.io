@@ -145,6 +145,291 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/3-4-FrozenLake%E4%BD%BF%E7%94%A8value-iteration%E6%96%B9%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="cxw">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/13/3-4-FrozenLake%E4%BD%BF%E7%94%A8value-iteration%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">3.4 FrozenLake使用value iteration方法</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-01-13 15:40:34 / Modified: 15:41:12" itemprop="dateCreated datePublished" datetime="2022-01-13T15:40:34+08:00">2022-01-13</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>﻿之前我们提到了状态价值和动作价值的估计：</p>
+<script type="math/tex; mode=display">
+V_s\gets \max _a\sum_{s'}{p_{a,s\rightarrow s'}\left( r_{s,a}+\gamma V_{s'} \right)}</script><script type="math/tex; mode=display">
+Q_{s,a}\gets \sum_{s'}{p_{a,s\rightarrow s'}\left( r_{s,a}+\gamma \max _{a'}Q_{s',a'} \right)}</script><p>我们需要估计状态转移概率（$p_{a,s\rightarrow s’}$），reward（r_{s,a}）。同时需要维护一个状态价值表以便价值迭代。具体实现时：</p>
+<ul>
+<li>reward table：包含“原状态”+“动作”+“下一状态”的字典。这个reward是实时获得的。</li>
+<li>transitions table：保存状态转移次数的字典。键是“state”+“action”的组合，值是另一个字典，它保存了下一个状态出现的次数。例如，如果在状态0时，我们执行10次动作1，之后有3次进入状态4，7次进入状态5。那这个表中(0,1)键的值将是一个包含{4:3,5:7}内容的字典。我们可以用这个表来估计状态转移的概率。<ul>
+<li>value table：记录每个状态和其value键值对的字典</li>
+</ul>
+</li>
+</ul>
+<p>代码逻辑很简单：在循环中，我们从环境中随机走100个step，更新reward table和transitions table。之后，对所有状态执行value iteration，更新value table。然后，使用更新的value table跑几个episode。如果这些episode的平均奖励高于0.8的阈值，那么我们就停止训练。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/3-3-%E4%BB%B7%E5%80%BC%E8%BF%AD%E4%BB%A3%EF%BC%88value-iteration%EF%BC%89%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="cxw">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/13/3-3-%E4%BB%B7%E5%80%BC%E8%BF%AD%E4%BB%A3%EF%BC%88value-iteration%EF%BC%89%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">3.3 价值迭代（value iteration）算法</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-01-13 15:39:43 / Modified: 15:40:19" itemprop="dateCreated datePublished" datetime="2022-01-13T15:39:43+08:00">2022-01-13</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>﻿﻿刚刚的例子很简单，在状态转移图中没有“环”，因此我们可以从末状态开始，计算他的价值，然后回到开始状态。然而，如果环境中有“环”，会给我们带来麻烦：</p>
+<p><img src="/2022/01/13/3-3-%E4%BB%B7%E5%80%BC%E8%BF%AD%E4%BB%A3%EF%BC%88value-iteration%EF%BC%89%E7%AE%97%E6%B3%95/13286520837115008.png" alt="13286520837115008"></p>
+<p>求$s_1,s_2$的价值？每个episode的奖励顺序是$[1,2,1,2,1,2,1,2，…]$。</p>
+<script type="math/tex; mode=display">
+V\left( s_1 \right) =\sum_{i=0}^{\infty}{\gamma ^{2i}+2\gamma ^{2i+1}}=1+\gamma \left( 2+\gamma \left( 1+\gamma \left( 2+\cdots \right) \right) \right)</script><script type="math/tex; mode=display">
+V\left( s_2 \right) =\sum_{i=0}^{\infty}{2\gamma ^{2i}+\gamma ^{2i+1}}=2+\gamma \left( 1+\gamma \left( 2+\gamma \left( 1+\cdots \right) \right) \right)</script><p>对于该问题的解，可以使用数值方法求近似解，也可以通过变形求解析解，即解方程组</p>
+<script type="math/tex; mode=display">
+\left\{ \begin{array}{l}
+    V\left( s_1 \right) =1+\gamma V\left( s_2 \right)\\
+    V\left( s_2 \right) =2+\gamma V\left( s_1 \right)\\
+\end{array} \right.</script><p>我们可以从这个例子抽取一个更为一般的算法，称为<strong>值迭代算法（value iteration）</strong>，能够通过数值方法计算具有已知转移概率和reward的马尔可夫决策过程（MDP）的状态价值和动作价值。</p>
+<p>状态价值的计算包括以下步骤：</p>
+<ol>
+<li>初始化状态价值$V_i$（一般设为0）</li>
+<li>对于MDP中的每个状态s，使用Bellman方程更新状态价值：$V_s\gets \max _a\sum_{s’}{p_{a,s\rightarrow s’}\left( r_{s,a}+\gamma V_{s’} \right)}$</li>
+<li>重复第二步，直到状态价值的变化很小为止</li>
+</ol>
+<p>动作价值的估计和状态价值几乎一样：</p>
+<ol>
+<li>初始化动作价值$Q_{s,a}$（一般设为0）</li>
+<li>对于MDP中的每个状态s和动作a，做以下更新：$Q_{s,a}\gets \sum_{s’}{p_{a,s\rightarrow s’}\left( r_{s,a}+\gamma \max _{a’}Q_{s’,a’} \right)}$</li>
+<li>重复第二步，直到动作价值的变化很小为止。</li>
+</ol>
+<p>在实践中，这种方法有几个明显的局限性。首先，我们的状态空间应该是离散的，而且维数不能太大，可以在所有状态上执行多次迭代。这对于FrozenLake-4x4甚至FrozenLake-8x8来说都不是问题，但对于CartPole来说，其observation_space是四个浮点数，没法直接用这个离散的算法。将观察值离散化是一个可行的方案。例如，可以将CartPole的观测空间拆分为多段，并将每段视为单个离散状态。然而，这又会带来另一个问题，例如间隔应该取多大；需要从环境中获取多少数据来估计价值。</p>
+<p>第二个问题是，我们并不知道奖励矩阵和状态转移矩阵。我们只有agent与环境交互的每个episode。然而，在Bellman方程的更新中，我们需要为每一次状态转移的概率和奖励值。因此，这个问题的明显需要对两个未知量估计。对于奖励，只需记录每次状态转移时获得的奖励即可；为了估计概率，我们需要为每个元组（s0，s1，a）维护一个计数器，用频率估计概率。 </p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/3-2-%E5%8A%A8%E4%BD%9C%E4%BB%B7%E5%80%BC%E5%87%BD%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="cxw">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/13/3-2-%E5%8A%A8%E4%BD%9C%E4%BB%B7%E5%80%BC%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">3.2 动作价值函数</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-01-13 15:38:51 / Modified: 15:41:45" itemprop="dateCreated datePublished" datetime="2022-01-13T15:38:51+08:00">2022-01-13</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>﻿﻿之前介绍的Bellman方程实际上是状态价值函数，$V(s)$。除此之外我们还可以定义动作价值函数$Q(s, a)$，即在状态s执行动作a所获得的总奖励，$Q(s, a)$可以通过$V(s)$来定义，同时也是Q-learning的基础。我们的主要目标是获得每对state和action的Q值。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/13/3-2-%E5%8A%A8%E4%BD%9C%E4%BB%B7%E5%80%BC%E5%87%BD%E6%95%B0/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/3-1-%E8%B4%9D%E5%B0%94%E6%9B%BC%EF%BC%88bellman%EF%BC%89%E6%96%B9%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="cxw">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/13/3-1-%E8%B4%9D%E5%B0%94%E6%9B%BC%EF%BC%88bellman%EF%BC%89%E6%96%B9%E7%A8%8B/" class="post-title-link" itemprop="url">3.1 贝尔曼（bellman）方程</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-01-13 15:37:45 / Modified: 15:41:35" itemprop="dateCreated datePublished" datetime="2022-01-13T15:37:45+08:00">2022-01-13</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>﻿﻿假设智能体观测到状态$s_0$，并且有$N$个可用action，每个action都会导致另一种状态，及相应的奖励。另外，假设我们知道与状态s0相连的所有状态的价值$V_i$。在这种情况下，智能体可以采取的最佳行动是什么？</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/13/3-1-%E8%B4%9D%E5%B0%94%E6%9B%BC%EF%BC%88bellman%EF%BC%89%E6%96%B9%E7%A8%8B/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -535,74 +820,11 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/1-1-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%80%E4%BB%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="cxw">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/13/1-1-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%80%E4%BB%8B/" class="post-title-link" itemprop="url">1.1 强化学习简介</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-01-13 14:30:52 / Modified: 15:29:16" itemprop="dateCreated datePublished" datetime="2022-01-13T14:30:52+08:00">2022-01-13</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>﻿强化学习（RL）不同于监督学习和无监督学习。一方面，它使用许多成熟的监督学习方法，如用于函数逼近的深度神经网络、随机梯度下降和反向传播，来学习数据表示。另一方面，RL通常以不同的方式应用它们。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/13/1-1-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%80%E4%BB%8B/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+  </nav>
 
 
 
@@ -667,7 +889,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

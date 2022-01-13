@@ -20,15 +20,19 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/index.html">
+  <meta name="description" content="之前我们提到了状态价值和动作价值的估计：  V_s\gets \max _a\sum_{s&#39;}{p_{a,s\rightarrow s&#39;}\left( r_{s,a}+\gamma V_{s&#39;} \right)} Q_{s,a}\gets \sum_{s&#39;}{p_{a,s\rightarrow s&#39;}\left( r_{s,a}+\gamma \max _{a&#39;}Q_{s&#39;,a&#39;} \right">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3.4 FrozenLake使用value iteration方法">
+<meta property="og:url" content="http://example.com/2022/01/13/3-4-FrozenLake%E4%BD%BF%E7%94%A8value-iteration%E6%96%B9%E6%B3%95/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="之前我们提到了状态价值和动作价值的估计：  V_s\gets \max _a\sum_{s&#39;}{p_{a,s\rightarrow s&#39;}\left( r_{s,a}+\gamma V_{s&#39;} \right)} Q_{s,a}\gets \sum_{s&#39;}{p_{a,s\rightarrow s&#39;}\left( r_{s,a}+\gamma \max _{a&#39;}Q_{s&#39;,a&#39;} \right">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-01-13T07:40:34.000Z">
+<meta property="article:modified_time" content="2022-01-13T07:41:12.970Z">
 <meta property="article:author" content="cxw">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/archives/">
+<link rel="canonical" href="http://example.com/2022/01/13/3-4-FrozenLake%E4%BD%BF%E7%94%A8value-iteration%E6%96%B9%E6%B3%95/">
 
 
 <script id="page-configurations">
@@ -36,12 +40,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Archive | Hexo</title>
+  <title>3.4 FrozenLake使用value iteration方法 | Hexo</title>
   
 
 
@@ -139,234 +143,89 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <span class="collection-header">Um..! 11 posts in total. Keep on posting.</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/3-4-FrozenLake%E4%BD%BF%E7%94%A8value-iteration%E6%96%B9%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="cxw">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          3.4 FrozenLake使用value iteration方法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-01-13 15:40:34 / Modified: 15:41:12" itemprop="dateCreated datePublished" datetime="2022-01-13T15:40:34+08:00">2022-01-13</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2022</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-01-13T15:40:34+08:00"
-              content="2022-01-13">
-          01-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/01/13/3-4-FrozenLake%E4%BD%BF%E7%94%A8value-iteration%E6%96%B9%E6%B3%95/" itemprop="url">
-            <span itemprop="name">3.4 FrozenLake使用value iteration方法</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-01-13T15:39:43+08:00"
-              content="2022-01-13">
-          01-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/01/13/3-3-%E4%BB%B7%E5%80%BC%E8%BF%AD%E4%BB%A3%EF%BC%88value-iteration%EF%BC%89%E7%AE%97%E6%B3%95/" itemprop="url">
-            <span itemprop="name">3.3 价值迭代（value iteration）算法</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-01-13T15:38:51+08:00"
-              content="2022-01-13">
-          01-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/01/13/3-2-%E5%8A%A8%E4%BD%9C%E4%BB%B7%E5%80%BC%E5%87%BD%E6%95%B0/" itemprop="url">
-            <span itemprop="name">3.2 动作价值函数</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-01-13T15:37:45+08:00"
-              content="2022-01-13">
-          01-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/01/13/3-1-%E8%B4%9D%E5%B0%94%E6%9B%BC%EF%BC%88bellman%EF%BC%89%E6%96%B9%E7%A8%8B/" itemprop="url">
-            <span itemprop="name">3.1 贝尔曼（bellman）方程</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-01-13T15:09:27+08:00"
-              content="2022-01-13">
-          01-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/" itemprop="url">
-            <span itemprop="name">2.4 FrozenLake使用cross-entropy方法</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-01-13T15:06:34+08:00"
-              content="2022-01-13">
-          01-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/01/13/2-3-CartPole-v0%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/" itemprop="url">
-            <span itemprop="name">2.3 CartPole-v0使用cross-entropy方法</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-01-13T15:03:01+08:00"
-              content="2022-01-13">
-          01-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/01/13/2-2-cross-entropy/" itemprop="url">
-            <span itemprop="name">2.2 cross-entropy</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-01-13T15:02:10+08:00"
-              content="2022-01-13">
-          01-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/01/13/2-1-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%88%86%E7%B1%BB/" itemprop="url">
-            <span itemprop="name">2.1 强化学习分类</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-01-13T14:43:17+08:00"
-              content="2022-01-13">
-          01-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/" itemprop="url">
-            <span itemprop="name">1.3 马尔可夫过程</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-01-13T14:31:59+08:00"
-              content="2022-01-13">
-          01-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/01/13/1-2-%E9%83%A8%E5%88%86%E5%90%8D%E8%AF%8D%E5%AE%9A%E4%B9%89/" itemprop="url">
-            <span itemprop="name">1.2 部分名词定义</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
+        <p>﻿之前我们提到了状态价值和动作价值的估计：</p>
+<script type="math/tex; mode=display">
+V_s\gets \max _a\sum_{s'}{p_{a,s\rightarrow s'}\left( r_{s,a}+\gamma V_{s'} \right)}</script><script type="math/tex; mode=display">
+Q_{s,a}\gets \sum_{s'}{p_{a,s\rightarrow s'}\left( r_{s,a}+\gamma \max _{a'}Q_{s',a'} \right)}</script><p>我们需要估计状态转移概率（$p_{a,s\rightarrow s’}$），reward（r_{s,a}）。同时需要维护一个状态价值表以便价值迭代。具体实现时：</p>
+<ul>
+<li>reward table：包含“原状态”+“动作”+“下一状态”的字典。这个reward是实时获得的。</li>
+<li>transitions table：保存状态转移次数的字典。键是“state”+“action”的组合，值是另一个字典，它保存了下一个状态出现的次数。例如，如果在状态0时，我们执行10次动作1，之后有3次进入状态4，7次进入状态5。那这个表中(0,1)键的值将是一个包含{4:3,5:7}内容的字典。我们可以用这个表来估计状态转移的概率。<ul>
+<li>value table：记录每个状态和其value键值对的字典</li>
+</ul>
+</li>
+</ul>
+<p>代码逻辑很简单：在循环中，我们从环境中随机走100个step，更新reward table和transitions table。之后，对所有状态执行value iteration，更新value table。然后，使用更新的value table跑几个episode。如果这些episode的平均奖励高于0.8的阈值，那么我们就停止训练。</p>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/13/3-3-%E4%BB%B7%E5%80%BC%E8%BF%AD%E4%BB%A3%EF%BC%88value-iteration%EF%BC%89%E7%AE%97%E6%B3%95/" rel="prev" title="3.3 价值迭代（value iteration）算法">
+      <i class="fa fa-chevron-left"></i> 3.3 价值迭代（value iteration）算法
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
   
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
+  
+  
 
 
 
@@ -518,6 +377,59 @@
   
 
   
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 
