@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>1.2 部分名词定义 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="下图显示了两个主要的RL实体——智能体和环境，及其通信通道——动作、奖励和观测。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.2 部分名词定义">
+<meta property="og:url" content="http://example.com/2022/01/13/1-2-%E9%83%A8%E5%88%86%E5%90%8D%E8%AF%8D%E5%AE%9A%E4%B9%89/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="下图显示了两个主要的RL实体——智能体和环境，及其通信通道——动作、奖励和观测。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/01/13/1-2-%E9%83%A8%E5%88%86%E5%90%8D%E8%AF%8D%E5%AE%9A%E4%B9%89/image-20220113115824793.png">
+<meta property="article:published_time" content="2022-01-13T06:31:59.000Z">
+<meta property="article:modified_time" content="2022-01-13T07:06:02.798Z">
+<meta property="article:author" content="cxw">
+<meta property="article:tag" content="reinforcement_learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/01/13/1-2-%E9%83%A8%E5%88%86%E5%90%8D%E8%AF%8D%E5%AE%9A%E4%B9%89/image-20220113115824793.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-1-2-部分名词定义" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/01/13/1-2-%E9%83%A8%E5%88%86%E5%90%8D%E8%AF%8D%E5%AE%9A%E4%B9%89/" class="article-date">
+  <time class="dt-published" datetime="2022-01-13T06:31:59.000Z" itemprop="datePublished">2022-01-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      1.2 部分名词定义
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>﻿﻿下图显示了两个主要的RL实体——智能体和环境，及其通信通道——动作、奖励和观测。</p>
+<span id="more"></span>
+<p><img src="/2022/01/13/1-2-%E9%83%A8%E5%88%86%E5%90%8D%E8%AF%8D%E5%AE%9A%E4%B9%89/image-20220113115824793.png" alt="image-20220113115824793"></p>
+<h2 id="奖励（Reward）"><a href="#奖励（Reward）" class="headerlink" title="奖励（Reward）"></a>奖励（Reward）</h2><p>让我们回到奖励的概念上来。在RL中，它只是我们定期从环境中获得的标量值。如前所述，奖励可以是正数或负数，大或小，但它只是一个数字。奖励的目的是说明智能体表现得有多好。我们没有定义智能体多久收到一次奖励；它可以是智能体生命周期中的每一秒或仅仅只有一次，尽管通常的做法是在每个固定的时间戳或在每个环境交互时收到奖励。在有些系统中（如once-in-a-lifetime reward systems），除最后一次奖励外，所有奖励均为零。</p>
+<p>奖励的目的是给智能体反馈其成功的情况，这是RL的核心内容。基本上，“强化”一词的来源也是如此，即智能体获得的奖励应该以积极或消极的方式强化其行为。奖励是局部的，这意味着它反映了代理最近活动的成功，而不是代理迄今为止取得的所有成功。当然，为次行动获得巨额奖励并不意味着之后就不会因为之前的决定而面临戏剧性的后果。这就像抢劫银行，在你考虑后果之前，这可能是个好主意。</p>
+<p>智能体试图实现的是在其行动序列中获得的最大累积回报。为了更好地理解奖励，下面列出了一些具体的奖励示例：</p>
+<ul>
+<li>金融交易：对买卖股票的交易者来说，一定数量的利润是一种奖励。 </li>
+<li>象棋：奖励是在游戏结果，即胜利，失败，或平局。当然，这取决于实际情况。例如，对我来说，在与象棋大师的比赛中取得平局也可以获得巨大的奖励。实际上，我们需要指定确切的奖励值，但这可能是一个相当复杂的表达式。例如，在象棋中，奖励可以与对手的实力成比例。</li>
+<li>大脑多巴胺系统：大脑中有一部分（边缘系统）每当需要向大脑其他部分发送积极信号时，就会产生多巴胺。多巴胺的浓度越高，就会产生愉悦感，这会加强这个系统认为有益的活动。</li>
+<li>电脑游戏：它们通常会给玩家明显的反馈，即杀死敌人的数量或收集的分数。请注意，一般在电脑游戏中，玩家得到的奖励已经经过累积，因此游戏的RL奖励应该是得分的导数或差分，即每次杀死新敌人+1，在所有其他时间为0。 </li>
+<li>Web导航：有一些问题需要自动提取Web上可用的信息，具有很高的实用价值。搜索引擎一般都试图解决这一问题，但有时，为了获取要查找的数据，需要填写一些表格或浏览一系列链接，或完成验证码，这对搜索引擎来说可能很难做到。对于那些任务，有一种基于RL的方法，其中奖励是需要获得的信息或结果。 </li>
+<li>神经网络架构搜索（NAS）：RL已成功应用于神经网络架构优化领域，其目的是通过调整层数或其参数、添加额外旁路连接或对NN架构进行其他更改，在某些数据集上获得最佳性能指标。在这种情况下，回报是性能（如精度）。 </li>
+<li>训练小狗：训练狗的时候，当它做你要求的事情时，你都需要给它一些好吃的（但不要太多）。当你的宠物不服从你的命令时，惩罚它一点（负面奖励）也是很常见的，尽管最近的研究表明这不如正面奖励有效。 </li>
+<li>考试成绩：我们都有经验，成绩是一种奖励制度，旨在为学生提供学习反馈。 </li>
+</ul>
+<h2 id="智能体（Agent）"><a href="#智能体（Agent）" class="headerlink" title="智能体（Agent）"></a>智能体（Agent）</h2><p>智能体是通过执行某些操作、进行观测并因此获得最终奖励来与环境进行交互的人或事物。在大多数实际的RL场景中，智能体是我们的软件，它应该以或多或少有效的方式解决一些问题。对于上面的几个示例，智能体如下：</p>
+<ul>
+<li>金融交易：一个交易系统或一个交易者</li>
+<li>象棋：棋手或计算机程序</li>
+<li>大脑多巴胺系统：大脑本身，根据感官数据，它决定这是否是一次好的体验</li>
+<li>电脑游戏：游戏玩家</li>
+<li>Web导航：告诉浏览器要单击哪些链接、将鼠标移动到哪里或输入哪些文本的软件</li>
+<li>NAS：控制神经网络具体架构的软件</li>
+<li>训练小狗：狗主人</li>
+<li>考试成绩：学生</li>
+</ul>
+<h2 id="环境（Environment）"><a href="#环境（Environment）" class="headerlink" title="环境（Environment）"></a>环境（Environment）</h2><p>环境是除智能体之外的一切。在最普遍的意义上，它是宇宙的其余部分，但这有点过大了，甚至超过了计算机的容量，所以我们通常遵循一般意义。智能体与环境的通信仅限于奖励（从环境中获得）、行动（由智能体执行并提供给环境）和观测（智能体从环境中获得的奖励之外的一些信息）。</p>
+<h2 id="行为-动作-操作-等（Action）"><a href="#行为-动作-操作-等（Action）" class="headerlink" title="行为/动作/操作 等（Action）"></a>行为/动作/操作 等（Action）</h2><p>动作是智能体可以在环境中执行的操作。例如，动作可以是游戏规则允许的动作（如果是游戏）。在RL中，我们区分两种类型的动作：离散动作和连续动作。离散动作形成智能体可以执行的相互排斥的有限集合，例如向左或向右移动。连续动作用连续变量表示，例如汽车转动方向盘，方向盘具有一定的角度。</p>
+<h2 id="观测-观察（Observation）"><a href="#观测-观察（Observation）" class="headerlink" title="观测/观察（Observation）"></a>观测/观察（Observation）</h2><p>对环境的观察形成了智能体的第二个信息渠道，第一个渠道是奖励。有人会问为什么需要一个单独的信息源，答案是为了方便。观察是环境向智能体提供的信息片段，用于说明代理周围发生了什么。 观察结果可能与未来的奖励相关，也可能不相关。观察结果甚至可以包含一些模糊的奖励信息，比如电脑游戏屏幕上的分数，分数数字只是像素，但我们可以将其转换为奖励值。另一方面，奖励不是次要或不重要的事情，奖励是推动智能体学习的主要力量。如果奖励是错误的、嘈杂的，或者只是稍微偏离了主要目标，那么训练就有可能走向错误的方向。</p>
+<p>区分环境状态和观测值也很重要。一个环境的状态可能包括不可观测的一些东西或者无用的信息，回到之前的例子来说明差别：</p>
+<ul>
+<li>金融交易：在这里，环境是整个金融市场和影响它的一切。这是一个庞大的列表，包括最新新闻、经济和政治状况、天气、食品供应和推特趋势。即使你今天决定呆在家里，也可能间接影响世界金融体系（因为“蝴蝶效应”）。然而，我们的观察仅限于股票价格、新闻等，我们无法获取环境的大部分状态。</li>
+<li>象棋：这里的环境是你自己、棋盘和你的对手，包括队友的技术、情绪、大脑状态、选择的战术等等。而观察是你所看到的当前的棋局，从某种意义上来说，心理学知识和理解对手情绪的能力可以增加你获胜的概率。 <ul>
+<li>多巴胺系统：这里的环境是你的大脑加上你的神经系统和你的器官状态加上你能感知的整个世界。观察是大脑内部的状态和来自你感官的信号。 </li>
+<li>电脑游戏：在这里，环境是你电脑的状态，包括所有内存和磁盘数据。对于网络游戏，还包括其他计算机以及它们与你自己计算机之间的所有互联网基础设施。而观察仅是屏幕的像素和声音，这些像素的数据量非常庞大，但整个环境的全部状态肯定更大。</li>
+<li>Web导航：这里的环境是Internet，包括我们的智能体工作的计算机和Web服务器之间的所有网络基础设施，这是一个非常庞大的系统，包括数百万个不同的组件。观察通常是在当前导航步骤加载的网页。</li>
+<li>NAS：环境相当简单，包括执行特定神经网络评估的工具包和用于获取性能指标的数据集。与互联网相比，这只是一个小环境。观察包括一些关于测试的信息，例如损失收敛信息或从评估步骤获得的其他度量。</li>
+<li>训练小狗：环境就是你的狗（包括它难以观察到的内心反应、情绪和生活经历）和它周围的一切，包括其他的狗，甚至是躲在灌木丛中的猫。观察是来自你的感官和记忆的信号。 </li>
+<li>学校：这里的环境是学校本身、国家的教育体系、社会和文化。观察结果与狗训练示例相同，即学生的感官和记忆。 </li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/01/13/1-2-%E9%83%A8%E5%88%86%E5%90%8D%E8%AF%8D%E5%AE%9A%E4%B9%89/" data-id="ckycn5q140001xoxtcdbfatfx" data-title="1.2 部分名词定义" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/reinforcement-learning/" rel="tag">reinforcement_learning</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          1.3 马尔可夫过程
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/01/13/1-1-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%80%E4%BB%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">1.1 强化学习简介</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/reinforcement-learning/" rel="tag">reinforcement_learning</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/reinforcement-learning/" style="font-size: 10px;">reinforcement_learning</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/">2.4 FrozenLake使用cross-entropy方法</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/13/2-3-CartPole-v0%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/">2.3 CartPole-v0使用cross-entropy方法</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/13/2-2-cross-entropy/">2.2 cross-entropy</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/13/2-1-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%88%86%E7%B1%BB/">2.1 强化学习分类</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/">1.3 马尔可夫过程</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 cxw<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

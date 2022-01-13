@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>2.4 FrozenLake使用cross-entropy方法 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="FrozenLake是gym的另一个grid world环境。其环境简单的栅格地图，有四种栅格状态，分别用字母SFHG表示，下面是一个地图的例子：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2.4 FrozenLake使用cross-entropy方法">
+<meta property="og:url" content="http://example.com/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="FrozenLake是gym的另一个grid world环境。其环境简单的栅格地图，有四种栅格状态，分别用字母SFHG表示，下面是一个地图的例子：">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/image-20220113120545113.png">
+<meta property="og:image" content="http://example.com/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/image-20220113120611148.png">
+<meta property="og:image" content="http://example.com/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/image-20220113120623872.png">
+<meta property="og:image" content="http://example.com/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/image-20220113120653753.png">
+<meta property="og:image" content="http://example.com/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/image-20220113120710437.png">
+<meta property="article:published_time" content="2022-01-13T07:09:27.000Z">
+<meta property="article:modified_time" content="2022-01-13T07:11:29.538Z">
+<meta property="article:author" content="cxw">
+<meta property="article:tag" content="reinforcement_learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/image-20220113120545113.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-2-4-FrozenLake使用cross-entropy方法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/" class="article-date">
+  <time class="dt-published" datetime="2022-01-13T07:09:27.000Z" itemprop="datePublished">2022-01-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      2.4 FrozenLake使用cross-entropy方法
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>﻿﻿<a target="_blank" rel="noopener" href="https://gym.openai.com/envs/FrozenLake-v0/">FrozenLake</a>是gym的另一个grid world环境。其环境简单的栅格地图，有四种栅格状态，分别用字母SFHG表示，下面是一个地图的例子：</p>
+<span id="more"></span>
+<p>SFFF       (S: starting point, safe)<br>FHFH       (F: frozen surface, safe)<br>FFFH       (H: hole, fall to your doom)<br>HFFG       (G: goal, where the frisbee is located)</p>
+<p>智能体的环境是一个大小为4×4的栅格地图，可以向四个方向移动：上、下、左、右。智能体总是从左上位置开始，它的目标是到达网格的右下单元格。地图中有些特定位置是洞（Hole），如果智能体进入这些洞，则当前episode就结束了，且奖励为零。如果智能体到达目标栅格（Goal），那么它将获得的奖励为1.0，此时episode结束。</p>
+<p>除此之外，FrozenLake环境还有很多不确定性因素，正如其名，智能体要在冰面上移动，移动时会打滑，所以智能体执行action后，其结果并不一定如action一样：它有33％的几率将滑到action的右边或左边。例如，如果智能体向左移动，则会有33％的概率实际是向上或向下移动，当然也会有33%的可能性就是向左移动。这种不确定性给训练带来了麻烦。</p>
+<p>我们先看看FrozenLake的基本属性：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">1</span>]: <span class="keyword">import</span> gym</span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: e = gym.make(<span class="string">&#x27;FrozenLake-v1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">3</span>]: e.observation_space</span><br><span class="line">Out[<span class="number">3</span>]: Discrete(<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">4</span>]: e.action_space</span><br><span class="line">Out[<span class="number">4</span>]: Discrete(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">5</span>]: e.reset()</span><br><span class="line">Out[<span class="number">5</span>]: <span class="number">0</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">6</span>]: e.render()</span><br><span class="line"></span><br><span class="line">SFFF</span><br><span class="line">FHFH</span><br><span class="line">FFFH</span><br><span class="line">HFFG</span><br></pre></td></tr></table></figure>
+<p>可以发现，观测空间是离散的从0到15的数字，显然，这个数字代表智能体在网格中的位置。动作空间也是离散的从0到3的数字。根据之前控制CartPole的经验，我们也可以使用cross-entropy方法控制FrozenLake环境，只需稍微修改一下代码。最主要的改动是神经网络的输入，CartPole中神经网络的输入是一个状态向量，而FrozenLake的状态是一个从0到16的整数，但是在这个问题中最好不要直接将状态输入神经网络，而应该使用one-hot编码的状态（为什么要用one-hot编码，互联网上已有很多相关讨论）。为了尽可能减少代码的改动，我们使用gym中的<code>ObservationWrapper</code>类实现one-hot编码类。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DiscreteOneHotWrapper</span>(<span class="params">gym.ObservationWrapper</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, env: gym.Env</span>) -&gt; <span class="literal">None</span>:</span></span><br><span class="line">        <span class="built_in">super</span>(DiscreteOneHotWrapper, self).__init__(env)</span><br><span class="line">        <span class="keyword">assert</span> <span class="built_in">isinstance</span>(env.observation_space, gym.spaces.Discrete)</span><br><span class="line">        shape = (env.observation_space.n, )</span><br><span class="line">        self.observation_space = spaces.Box(<span class="number">0.0</span>, <span class="number">1.0</span>, shape=shape, dtype=np.float32)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">observation</span>(<span class="params">self, observation</span>):</span></span><br><span class="line">        obs = np.copy(self.observation_space.low)</span><br><span class="line">        obs[observation] = <span class="number">1.0</span></span><br><span class="line">        <span class="keyword">return</span> obs</span><br></pre></td></tr></table></figure>
+<p>除此之外还要在<code>main</code>函数中用<code>DiscreteOneHotWrapper</code>类对环境进行处理：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">env = DiscreteOneHotWrapper(gym.make(<span class="string">&#x27;FrozenLake-v1&#x27;</span>))</span><br></pre></td></tr></table></figure>
+<p>程序运行后在tensorboard中监控训练过程</p>
+<p><img src="/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/image-20220113120545113.png" alt="image-20220113120545113"></p>
+<p>我们发现不论训练了多少batch，虽然loss下降了，但是智能体的reward_bound总是0，也就是说智能体啥都没学到。为什么cross-entropy算法在CartPole环境中表现良好，但在FrozenLake环境中表现很差呢。</p>
+<p>我们需要更深入地研究这两种环境的奖励机制。</p>
+<p>在CartPole中，每过一个timestep，智能体都会得到1.0的奖励，直到倒立摆落下的那一刻。所以，智能体平衡倒立摆的时间越长，得到的奖励就越多。由于智能体行为的随机性，不同的episode长度也不同，而不同的奖励服从正态分布。在选择奖励边界后，我们“淘汰”了表现不好的episode，并通过对“优秀”的episode进行训练获得更好的表现。就像下图一样<br><img src="/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/image-20220113120611148.png" alt="image-20220113120611148"><br>而在FrozenLake的奖励机制是不同的。只有当我们达到目标（Goal）时，我们才会获得1.0的奖励，而这种奖励并不能说明episode有多棒。它是快速有效的还是瞎猫碰上死耗子一样走到Goal的？我们不知道。我们只知道他成功了。除此之外，episode的奖励分配也存在问题。只有两种奖励：0（失败）或1（成功）。显然，刚开始的时候“失败”占主导地位，所以，我们只考虑“优秀”的episode是不对的（注意在这个环境中“优秀”==“成功到达Goal”，显然智能体很难在随机的policy下到达终点)。这就是训练失败的原因。</p>
+<p><img src="/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/image-20220113120623872.png" alt="image-20220113120623872"></p>
+<p>这个例子说明了<strong>交叉熵方法的局限性</strong>：</p>
+<ol>
+<li>每个episode必须是有限的，越短越好</li>
+<li>每个episode的奖励应该有足够的区分度，以区分“优秀”和“差劲”的episode</li>
+<li>智能体要么到达终点，要么正在前往终点，而不会在半路上嗝屁（比如半路上掉到洞里）</li>
+</ol>
+<p>其实有很多种算法可以用来解决这些限制，但是现在我们专注于解决cross-entropy方法遇到的问题。我们可以做如下调整：</p>
+<ol>
+<li>更大的batchsize： 在CartPole中，每个batch有16个episode就足够了，但FrozenLake至少需要100个以上episode才能获得一些成功的episode。</li>
+<li>对reward施加discount factor：为了让episode的总奖励和它的长度呈正相关，并使reward多样化（而不是只有0和1），我们可以使$\gamma=0.99$或$\gamma=0.9$。增加了奖励分配的可变性，这有助于避免两极分化严重。</li>
+<li>让“优秀”的episode多训练几次：在“CartPole”中，我们选取较好的episode进行训练，然后把它们扔掉，继续之后的随机采样。但是在FrozenLake中，优秀的episode是稀客，所以我们需要将它们保留下来，多训练几次。</li>
+<li>降低学习率：这个没啥可说的，深度学习基本调参技巧。</li>
+<li>延长训练时间：对于深度学习来说这也是基本技巧，但是针对这个问题本身是有实际意义的，由于好的episode太罕见了，为了获得更多的训练样本就需要采样更多的episode（由此可见训练效率之低下）。</li>
+</ol>
+<p>对于代码的调整，我们需要添加一个函数计算折扣奖励并保存历史记录中优秀的episode：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">batch_filter</span>(<span class="params">batch, percentile</span>):</span></span><br><span class="line">    reward_list = <span class="built_in">list</span>(<span class="built_in">map</span>(<span class="keyword">lambda</span> episode: episode.rewards, batch))</span><br><span class="line">    reward_bound = np.percentile(reward_list, percentile)</span><br><span class="line">    reward_mean = np.mean(reward_list)</span><br><span class="line"></span><br><span class="line">    train_observation = []</span><br><span class="line">    train_action = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> rewards, steps <span class="keyword">in</span> batch:</span><br><span class="line">        <span class="keyword">if</span> rewards &lt; reward_bound:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        train_observation.extend(<span class="built_in">map</span>(<span class="keyword">lambda</span> step: step.observation, steps))</span><br><span class="line">        train_action.extend(<span class="built_in">map</span>(<span class="keyword">lambda</span> step: step.action, steps))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> torch.tensor(train_observation), torch.tensor(train_action), reward_bound, reward_mean</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>在训练时，保存之前优秀的episode，把它传递给下一次迭代：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> iter_no, batch <span class="keyword">in</span> <span class="built_in">enumerate</span>(batch_iterator(env, net, BATCH_SIZE)):</span><br><span class="line">    reward_mean = np.mean(<span class="built_in">list</span>(<span class="built_in">map</span>(<span class="keyword">lambda</span> step: step.rewards, batch)))</span><br><span class="line">    full_batch, observation, action, reward_bound = batch_filter_with_gamma(full_batch + batch, PERCENTILE, GAMMA)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> full_batch:</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    full_batch = full_batch[-<span class="number">500</span>:]</span><br></pre></td></tr></table></figure>
+<p>再就是之前提到的降低学习率和增大batch_size。在tensorboard中监控训练过程：</p>
+<p><img src="/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/image-20220113120653753.png" alt="image-20220113120653753"></p>
+<p>经过一段时间的耐心等待，可以看到，模型的训练在成功率在55%左右停止了改进，虽然没有达到理想的效果，但是比之前的表现进步了很多。有一些深度学习的技巧可以解决这个问题（例如，正则化），我们后面会讨论这些技术。</p>
+<p>FrozenLake还有一个没有随机滑动的版本，也就是说智能体执行什么action就会产生相应的结果。只需要更改相应参数即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">env = gym.make(<span class="string">&#x27;FrozenLake-v1&#x27;</span>, is_slippery=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p>这时候训练速度会大大提高，没有了环境随机性的影响，智能体的表现也变得很好了。</p>
+<p><img src="/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/image-20220113120710437.png" alt="image-20220113120710437"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/" data-id="ckycn5q1a0008xoxt82skb2wl" data-title="2.4 FrozenLake使用cross-entropy方法" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/reinforcement-learning/" rel="tag">reinforcement_learning</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/01/13/2-3-CartPole-v0%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">2.3 CartPole-v0使用cross-entropy方法</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/reinforcement-learning/" rel="tag">reinforcement_learning</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/reinforcement-learning/" style="font-size: 10px;">reinforcement_learning</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/">2.4 FrozenLake使用cross-entropy方法</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/13/2-3-CartPole-v0%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/">2.3 CartPole-v0使用cross-entropy方法</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/13/2-2-cross-entropy/">2.2 cross-entropy</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/13/2-1-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%88%86%E7%B1%BB/">2.1 强化学习分类</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/">1.3 马尔可夫过程</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 cxw<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>1.3 马尔可夫过程 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="之前介绍的奖励、智能体、动作、观察和环境可以看成RL的一级概念。以此为基础，我们将探索RL的二级概念，包括状态（state）、事件（episode）、历史（history）、价值（value）和收益（gain&#x2F;return）。 我们从最简单的马尔可夫过程（MP）开始，然后加入奖励（reward）扩展它，变成马尔可夫奖励过程（Markov reward process）。然后添加行动（actio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.3 马尔可夫过程">
+<meta property="og:url" content="http://example.com/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="之前介绍的奖励、智能体、动作、观察和环境可以看成RL的一级概念。以此为基础，我们将探索RL的二级概念，包括状态（state）、事件（episode）、历史（history）、价值（value）和收益（gain&#x2F;return）。 我们从最简单的马尔可夫过程（MP）开始，然后加入奖励（reward）扩展它，变成马尔可夫奖励过程（Markov reward process）。然后添加行动（actio">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/13286519986025687.jpeg">
+<meta property="og:image" content="http://example.com/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/image-20220113120117979.png">
+<meta property="og:image" content="http://example.com/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/image-20220113120140880.png">
+<meta property="og:image" content="http://example.com/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/image-20220113120200298.png">
+<meta property="og:image" content="http://example.com/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/image-20220113120216201.png">
+<meta property="article:published_time" content="2022-01-13T06:43:17.000Z">
+<meta property="article:modified_time" content="2022-01-13T07:01:25.175Z">
+<meta property="article:author" content="cxw">
+<meta property="article:tag" content="reinforcement_learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/13286519986025687.jpeg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-1-3-马尔可夫过程" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/" class="article-date">
+  <time class="dt-published" datetime="2022-01-13T06:43:17.000Z" itemprop="datePublished">2022-01-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      1.3 马尔可夫过程
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>﻿﻿之前介绍的奖励、智能体、动作、观察和环境可以看成RL的一级概念。以此为基础，我们将探索RL的二级概念，包括状态（state）、事件（episode）、历史（history）、价值（value）和收益（gain/return）。</p>
+<p>我们从最简单的马尔可夫过程（MP）开始，然后加入奖励（reward）扩展它，变成马尔可夫奖励过程（Markov reward process）。然后添加行动（action），实现马尔可夫决策过程（Markov decision processes，MDP）。</p>
+<span id="more"></span>
+<h2 id="马尔可夫过程"><a href="#马尔可夫过程" class="headerlink" title="马尔可夫过程"></a>马尔可夫过程</h2><p>让我们从Markov家族中最简单的开始：MP，也称为Markov链。想象一下，你面前有一个只能观察（不能对其操作）的系统。你观察到的东西叫做<strong>状态（states）</strong>，系统可以根据一些动力学定律在状态之间切换。你不能影响系统，只能观察状态的变化。系统的所有可能状态形成一个称为状态空间的集合。对于MP，我们假设这组状态是有限的。你的观察形成一系列状态或一条<strong>链（chain）</strong>（这就是为什么MP也被称为马尔可夫链）。例如，看看某个城市最简单的天气模型，我们可以观察到今天是晴天还是雨天，这是我们的状态空间。随着时间的推移，一系列的观测形成了一系列的状态，例如</p>
+<blockquote>
+<p>[晴天，晴天，下雨，晴天，…]</p>
+</blockquote>
+<p>这被称为<strong>历史（history）</strong>。</p>
+<p>要将这样一个系统称为MP，它需要满足<strong>马尔可夫性</strong>，也就是说未来系统怎样变化只能依赖于当前状态而不依赖之前状态。换句话说，只需要一个状态就可以对系统的未来进行建模，而不需要之前的状态。</p>
+<p>在天气的例子中，马尔可夫性将我们的模型限制为仅表示晴天之后可能会有相同概率的雨天的情况，而不管我们过去看到了多少晴天。<strong>显然这不是一个非常现实的模型</strong>，因为根据常识，我们知道明天下雨的可能性不仅取决于当前的条件，还取决于大量其他因素，例如季节、纬度以及地形地势。最近证明，即使是太阳活动对天气也有重大影响。因此，我们的例子非常naive，但了解这些限制并有意识地做出决定是很重要的。</p>
+<p>当然，如果我们想使模型更复杂，我们总是可以通过扩展状态空间来实现，这将允许我们以更大的状态空间为代价捕获模型中更多的依赖项。例如，如果要分别捕获夏季和冬季雨天的概率，则可以将该季节信息包含在状态中。在这种情况下，状态空间将是[阳光+夏天、阳光+冬天、下雨+夏天、下雨+冬天]等等。 </p>
+<p>当系统模型符合马尔可夫特性时，可以使用<strong>转移矩阵（transition matrix）</strong>表示转移概率，转移矩阵是一个大小为$N×N$的方阵，其中$N$是模型中的状态数。矩阵中$i$行和$j$列的元素表示系统从状态$i$转移到状态$j$的概率。</p>
+<p>例如，在晴天/雨天的例子中，状态转移矩阵可以如下所示：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Sunny</th>
+<th>Rainy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sunny</td>
+<td>0.8</td>
+<td>0.2</td>
+</tr>
+<tr>
+<td>Rainy</td>
+<td>0.1</td>
+<td>0.9</td>
+</tr>
+<tr>
+<td>在这种情况下，如果今天是晴天，那么第二天有80%的可能性是晴，有20%的可能性雨。如果我们观察到是雨天，那么天气好转的概率为10%，而第二天下雨的概率为90%。</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>可以用图表示MP，其中的节点对应于系统状态，边表示从状态到状态的转移概率。如果概率为0，就不画边（从一种状态到另一种状态是不可能的）。这种表示也广泛应用于自动机理论中研究的有限状态机表示。<br><img src="/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/13286519986025687.jpeg" alt="13286519986025687"><br>再说一遍，在MP问题中，我们的只是观察，我们没有办法影响天气，所以我们只是观察并记录我们的观察结果。</p>
+<p>下面看一个更复杂的例子，叫做Office Worker模型，如下图</p>
+<p><img src="/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/image-20220113120117979.png" alt="image-20220113120117979"></p>
+<p>实际上，我们很少有机会知道确切的转移矩阵。真实的情况是，我们只能观察到系统的状态，这也被称为<strong>事件（episodes）</strong>： </p>
+<ul>
+<li>Home →Coffee → Coffee → Chat → Chat → Coffee →Computer → Computer →Home</li>
+<li>Computer → Computer → Chat → Chat → Coffee → Computer → Computer → Computer</li>
+<li>Home → Home → Coffee → Chat → Computer → Coffee → Coffee</li>
+</ul>
+<p>根据我们的观察结果估计转移矩阵并不复杂，我们只需计算每个状态的所有转移，并将它们归一化为和为1的概率。观测越多，我们的估计就越接近真实的转移概率模型。还值得注意的是，马尔可夫特性意味着平稳性（即，任何状态的转移概率分布都不会随时间而改变）。非平稳性意味着存在一些影响我们系统动力学的隐藏因素，而这个因素不包括在观测中。然而，这与马尔可夫特性相矛盾，马尔可夫特性要求无论转移的历史如何，相同状态的转移概率分布都是相同的。</p>
+<p>在一个事件中观察到的转移概率和真实转移矩阵中的概率是不同的，我们观察到的具体事件是从真实转移矩阵模型的分布中随机抽样的，不同的抽样结果也不同，然而，抽样前后状态转移的概率保持不变，否则，马尔可夫性就不能保证了。</p>
+<h2 id="马尔可夫奖励过程"><a href="#马尔可夫奖励过程" class="headerlink" title="马尔可夫奖励过程"></a>马尔可夫奖励过程</h2><p>为了引入奖励，我们需要稍微扩展一下我们的MP模型。</p>
+<p>首先，我们需要为从一个状态到另一个状态的转移附加上价值（value）。奖励可以用各种形式表示。最容易想到的方法是使用另一个类似于转移矩阵的方阵，矩阵中$i$行和$j$列的元素表示从状态$i$转移到状态$j$的奖励。</p>
+<p>添加到模型中的第二件事是折扣因子（ discount factor）$\gamma$ ，它是一个从0到1（包括）的实数。</p>
+<p>我们从MP中观察到一系列状态转移，马尔可夫奖励过程也是这样，但是对于每一种状态转移，我们都有额外的奖励信号。对于每个episode，我们将t时刻的回报（return）定义为：</p>
+<script type="math/tex; mode=display">
+G_t=R_{t+1}+\gamma R_{t+2} + \cdots</script><p>对于每个时刻，我们将return计算为后续rewards的总和，但较远的奖励将乘以折扣系数，该系数与我们距离t时刻时间的幂次方成正比。discount factor代表agent的考虑问题时目光的长远性。如果$\gamma=1$，那么gain正好等于所有后续奖励的总和。如果$\gamma=0$，gain只是当前的reward，没有任何后续状态。这种极端的取值仅在特殊情境中使用，大多数情况下，$\gamma$时介于0和1之间的值，例如0.9或0.99，在这种情况下，我们会考虑未来的奖励，但这个未来不是无限远的未来。而$\gamma=1$一般适用于短的，有限的episode的情况。 </p>
+<p>但是我们定义的$G_t$在实践中并不是很有用，因为它是根据马尔可夫奖励过程中观察到的每个特定链定义的，所以即使是在相同的state下，它也可以变化很大。然而，如果我们计算每个状态的return的数学期望，我们将得到一个更有用的量，称为<strong>状态价值</strong>：</p>
+<script type="math/tex; mode=display">
+V(s)=\mathbb{E}[G|S_t=s]</script><p>我们在之前的Office Worker模型加入奖励，使之变成Office Worker reward process，如下图所示：</p>
+<p><img src="/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/image-20220113120140880.png" alt="image-20220113120140880"></p>
+<p>我们将从一个简单的例子开始：$\gamma=0$。如何计算状态价值？我们假设初始状态为chat，根据状态转移矩阵，有50%的概率下一个状态还是chat，20%是coffee，30%是computer。当$\gamma=0$时，智能体的回报（return)等于下一个状态的价值。因此，如果我们想要计算聊天状态的值，那么我们需要将所有状态转移的奖励加权求和：</p>
+<script type="math/tex; mode=display">
+V(chat)=-1*0.5+2*0.3+1*0.2=0.3</script><script type="math/tex; mode=display">
+V(coffee) = 2 * 0.7 + 1 * 0.1 + 3 * 0.2 = 2.1</script><script type="math/tex; mode=display">
+V(home) = 1 * 0.6 + 1 * 0.4 = 1.0</script><script type="math/tex; mode=display">
+V(computer) = 5 * 0.5 + (–3) * 0.1 + 1 * 0.2 + 2 * 0.2 = 2.8</script><p>这样一来，computer是最有价值的状态，因此在$\gamma=0$的时候最好的状态转移是computer-&gt;computer。</p>
+<p>现在有一个更棘手的问题，当$\gamma=1$时，价值是多少？仔细想想，答案是所有状态的价值都是无限的。这个例子中的图不包含汇状态（只进不出），当折扣因子等于1时，要考虑未来无限次状态转移。由于$\gamma=0$时所有的价值在短期内都是正值，所以无论起始状态如何，无穷多个正值的总和都会给我们一个无穷大的价值。</p>
+<p>这也是我们将$\gamma$引入马尔可夫奖励过程的原因之一。由于处理无穷大的价值不切实际，我们希望限制价值的范围。$\gamma\in(0,1)$提供了这样的限制。如果episode的步长是有限的（例如，井字棋最多九个步长），那么就可以使用$\gamma=1$了。更特殊的情况是只有一个步骤，称为多臂赌博机（multi-armed bandit），每个episode只用做一个动作，就结束了。</p>
+<h2 id="Actions、MDP"><a href="#Actions、MDP" class="headerlink" title="Actions、MDP"></a>Actions、MDP</h2><p>还缺什么？还缺actions。首先，添加一组动作。其次，需要用动作来调节转移矩阵，这意味着我们的矩阵需要一个额外的动作维度，变成一个立方体。马尔可夫奖励过程变成了马尔可夫决策过程（MDP）</p>
+<p><img src="/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/image-20220113120200298.png" alt="image-20220113120200298"></p>
+<p>我们还是举个例子：假设有一个机器人在$3×3$网格中，它可以执行向左、向右和向前的动作。状态是机器人的位置加方向（上、下、左、右），一共有$3×3×4=36$个状态（机器人可以在任何位置有任意朝向）。此外，假设机器人的电机不完美，当它执行左转或右转或前进时，有10%的概率车轮打滑，机器人的位置保持不变。下图是一个例子，显示了当机器人位于网格中心且面朝上时，即状态（1，1，向上）可能发生的状态转移<br><img src="/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/image-20220113120216201.png" alt="image-20220113120216201"><br>到现在为止，智能体获得的return不仅取决于其最终所处的状态，还取决于导致这种状态的行动。这和我们日常生活是一致的，做一件事情即便结果是一样的，但过程不同，最后的奖励也不同。</p>
+<p>下面讨论MDP和RL最重要的事情：策略（policy）。</p>
+<h2 id="Policy"><a href="#Policy" class="headerlink" title="Policy"></a>Policy</h2><p>policy的简单定义是，一组控制智能体行为的规则。例如前面的例子，机器人在网格世界中可以按一下规则执行操作：</p>
+<ul>
+<li>到处瞎走</li>
+<li>通过提前试探绕过障碍物</li>
+<li>原地转圈</li>
+</ul>
+<p>注意，RL中智能体的主要目标是获得尽可能多的return。不同的policy会带来不同的return，因此找到一个表现优秀的policy非常重要。</p>
+<p>在形式上，policy定义为每种state下action的概率分布： </p>
+<script type="math/tex; mode=display">
+\pi(a|s)=P[A_t=a|S_t=s]</script><p>有趣的是，如果我们采用确定性策略，即概率为1，那么MDP就变成了马尔可夫奖励过程，因为我们用策略的概率简化转移矩阵和奖励矩阵，并去掉action维度。 </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/" data-id="ckycn5q160003xoxt73cfg2y4" data-title="1.3 马尔可夫过程" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/reinforcement-learning/" rel="tag">reinforcement_learning</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/01/13/2-1-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%88%86%E7%B1%BB/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          2.1 强化学习分类
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/01/13/1-2-%E9%83%A8%E5%88%86%E5%90%8D%E8%AF%8D%E5%AE%9A%E4%B9%89/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">1.2 部分名词定义</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/reinforcement-learning/" rel="tag">reinforcement_learning</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/reinforcement-learning/" style="font-size: 10px;">reinforcement_learning</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/">2.4 FrozenLake使用cross-entropy方法</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/13/2-3-CartPole-v0%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/">2.3 CartPole-v0使用cross-entropy方法</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/13/2-2-cross-entropy/">2.2 cross-entropy</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/13/2-1-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%88%86%E7%B1%BB/">2.1 强化学习分类</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/">1.3 马尔可夫过程</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 cxw<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
