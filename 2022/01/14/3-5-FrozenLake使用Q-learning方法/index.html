@@ -20,28 +20,32 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="CXW&#39;s Blog">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="Q-learning方法和value-iteration方法实现起来没有太大改动。最明显的变化是对value table的改变。在之前的示例中，我们储存的是state的reward，所以字典中的键是state，现在我们需要存储$Q(s,a)$的值，它有两个参数：state和action，所以键现在是一个复合键。 第二个区别在于calc_action_value()函数。Q-learning不再需要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3.5 FrozenLake使用Q-learning方法">
+<meta property="og:url" content="http://example.com/2022/01/14/3-5-FrozenLake%E4%BD%BF%E7%94%A8Q-learning%E6%96%B9%E6%B3%95/index.html">
 <meta property="og:site_name" content="CXW&#39;s Blog">
+<meta property="og:description" content="Q-learning方法和value-iteration方法实现起来没有太大改动。最明显的变化是对value table的改变。在之前的示例中，我们储存的是state的reward，所以字典中的键是state，现在我们需要存储$Q(s,a)$的值，它有两个参数：state和action，所以键现在是一个复合键。 第二个区别在于calc_action_value()函数。Q-learning不再需要">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-01-14T12:46:41.000Z">
+<meta property="article:modified_time" content="2022-01-15T03:15:00.799Z">
 <meta property="article:author" content="cxw">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2022/01/14/3-5-FrozenLake%E4%BD%BF%E7%94%A8Q-learning%E6%96%B9%E6%B3%95/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>CXW's Blog</title>
+  <title>3.5 FrozenLake使用Q-learning方法 | CXW's Blog</title>
   
 
 
@@ -139,9 +143,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
@@ -157,10 +162,9 @@
       <meta itemprop="name" content="CXW's Blog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/14/3-5-FrozenLake%E4%BD%BF%E7%94%A8Q-learning%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">3.5 FrozenLake使用Q-learning方法</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          3.5 FrozenLake使用Q-learning方法
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -190,7 +194,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>Q-learning方法和value-iteration方法实现起来没有太大改动。最明显的变化是对value table的改变。在之前的示例中，我们储存的是state的reward，所以字典中的键是state，现在我们需要存储$Q(s,a)$的值，它有两个参数：state和action，所以键现在是一个复合键。</p>
+        <p>Q-learning方法和value-iteration方法实现起来没有太大改动。最明显的变化是对value table的改变。在之前的示例中，我们储存的是state的reward，所以字典中的键是state，现在我们需要存储$Q(s,a)$的值，它有两个参数：state和action，所以键现在是一个复合键。</p>
 <p>第二个区别在于<code>calc_action_value()</code>函数。Q-learning不再需要它了，因为其动作价值存储在value table中。</p>
 <p>最后，代码实现中最重要的变化是value_iteration()方法。以前，它只是调用calc_action_value()包装起来的函数，目的是近似bellman方程，现在，由于这个函数已经被value table所取代，所以我们需要在value_iteration()方法中做这个近似。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ctypes.wintypes <span class="keyword">import</span> tagMSG</span><br><span class="line"><span class="keyword">import</span> gym</span><br><span class="line"><span class="keyword">import</span> collections</span><br><span class="line"><span class="keyword">from</span> tensorboardX <span class="keyword">import</span> SummaryWriter</span><br><span class="line"></span><br><span class="line">ENV_NAMES = [<span class="string">&#x27;FrozenLake-v1&#x27;</span>, <span class="string">&#x27;FrozenLake8x8-v1&#x27;</span>]</span><br><span class="line">ENV_ID = <span class="number">1</span></span><br><span class="line">GAMMA = <span class="number">0.9</span></span><br><span class="line">TEST_EPISODES = <span class="number">20</span></span><br><span class="line">RANDOM_STEPS = <span class="number">500</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Agent</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.env = gym.make(ENV_NAMES[ENV_ID])</span><br><span class="line">        self.state = self.env.reset()  <span class="comment"># 获得初始observation</span></span><br><span class="line">        self.rewards = collections.defaultdict(<span class="built_in">float</span>)  <span class="comment"># reward table</span></span><br><span class="line">        self.transits = collections.defaultdict(collections.Counter)  <span class="comment"># transitions table</span></span><br><span class="line">        self.values = collections.defaultdict(<span class="built_in">float</span>)  <span class="comment"># value table</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">play_n_random_steps</span>(<span class="params">self, count</span>):</span></span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        从环境中收集随机经验，并更新rewards和transits table。</span></span><br><span class="line"><span class="string">        注意，我们不需要等到episode结束才开始学习。我们只需要执行N步，记住结果。</span></span><br><span class="line"><span class="string">        这是value iteration和cross-entropy的区别之一，cross-entropy只能学习完整的episode</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(count):</span><br><span class="line">            action = self.env.action_space.sample()</span><br><span class="line">            new_state, reward, done, _ = self.env.step(action)</span><br><span class="line">            self.rewards[(self.state, action, new_state)] = reward</span><br><span class="line">            self.transits[(self.state, action)][new_state] += <span class="number">1</span></span><br><span class="line">            self.state = self.env.reset() <span class="keyword">if</span> done <span class="keyword">else</span> new_state</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">select_action</span>(<span class="params">self, state</span>):</span></span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        选取最佳action</span></span><br><span class="line"><span class="string">        迭代环境中的所有可能的action，并计算每个action的value</span></span><br><span class="line"><span class="string">        返回具有最大value的action</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        best_action, best_value = <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line">        <span class="keyword">for</span> action <span class="keyword">in</span> <span class="built_in">range</span>(self.env.action_space.n):</span><br><span class="line">            action_value = self.values[(state, action)]</span><br><span class="line">            <span class="keyword">if</span> best_value <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">or</span> best_value &lt; action_value:</span><br><span class="line">                best_value = action_value</span><br><span class="line">                best_action = action</span><br><span class="line">        <span class="keyword">return</span> best_action</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">play_episode</span>(<span class="params">self, env: gym.Env</span>):</span></span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        使用最佳action，并使用传入的环境跑一个完整的episode</span></span><br><span class="line"><span class="string">        我们不想干扰原有用于收集随机数据的环境的当前状态</span></span><br><span class="line"><span class="string">        因此，使用作为参数传递的第二个环境</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        total_reward = <span class="number">0.0</span></span><br><span class="line">        state = env.reset()</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            action = self.select_action(state)</span><br><span class="line">            new_state, reward, done, _ = env.step(action)</span><br><span class="line">            self.rewards[(state, action, new_state)] = reward</span><br><span class="line">            self.transits[(state, action)][new_state] += <span class="number">1</span></span><br><span class="line">            total_reward += reward</span><br><span class="line">            state = new_state</span><br><span class="line">            <span class="keyword">if</span> done:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">return</span> total_reward</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">value_iteration</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        value iteration的实现</span></span><br><span class="line"><span class="string">        Q(s,a)的更新</span></span><br><span class="line"><span class="string">        与calc_action_value()非常相似，事实上，它们做的几乎是相同的事情。</span></span><br><span class="line"><span class="string">        对于给定的state和action，它需要使用已有的统计信息来计算这个action value。</span></span><br><span class="line"><span class="string">        之前我们将它存储在value table中，现在不能再这样做了，</span></span><br><span class="line"><span class="string">        所以我们必须调用select_action方法，它会为我们选择q值最大的action，</span></span><br><span class="line"><span class="string">        然后把这个q值作为target state的value。</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">for</span> state <span class="keyword">in</span> <span class="built_in">range</span>(self.env.observation_space.n):</span><br><span class="line">            <span class="keyword">for</span> action <span class="keyword">in</span> <span class="built_in">range</span>(self.env.action_space.n):</span><br><span class="line">                action_value = <span class="number">0.0</span></span><br><span class="line">                target_counts = self.transits[(state, action)]</span><br><span class="line">                total = <span class="built_in">sum</span>(target_counts.values())</span><br><span class="line">                <span class="keyword">for</span> tgt_state, count <span class="keyword">in</span> target_counts.items():</span><br><span class="line">                    key = (state, action, tgt_state)</span><br><span class="line">                    reward = self.rewards[key]</span><br><span class="line">                    best_action = self.select_action(tgt_state)</span><br><span class="line">                    val = reward + GAMMA * self.values[(tgt_state, best_action)]</span><br><span class="line">                    action_value += (count/total)*val</span><br><span class="line">                self.values[(state, action)] = action_value</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    test_env = gym.make(ENV_NAMES[ENV_ID])</span><br><span class="line">    agent = Agent()</span><br><span class="line">    writer = SummaryWriter(comment=<span class="string">&#x27;-v-iteration&#x27;</span>)</span><br><span class="line">    iter_no = <span class="number">0</span></span><br><span class="line">    best_reward = <span class="number">0.0</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        iter_no += <span class="number">1</span></span><br><span class="line">        agent.play_n_random_steps(RANDOM_STEPS)  <span class="comment"># 首先随机执行100个step，用新的数据填充reward_table和transits_table</span></span><br><span class="line">        agent.value_iteration()  <span class="comment"># 然后执行value_iteration操作</span></span><br><span class="line">        reward = <span class="number">0.0</span></span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(TEST_EPISODES):</span><br><span class="line">            reward += agent.play_episode(test_env)</span><br><span class="line">        reward /= TEST_EPISODES</span><br><span class="line">        writer.add_scalar(<span class="string">&#x27;reward&#x27;</span>, reward, iter_no)</span><br><span class="line">        <span class="keyword">if</span> reward &gt; best_reward:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Best reward updated %.3f -&gt; %.3f&quot;</span> % (best_reward, reward))</span><br><span class="line">            best_reward = reward</span><br><span class="line">        <span class="keyword">if</span> reward &gt; <span class="number">0.80</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Solved in %d iterations!&quot;</span> % iter_no)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    writer.close()</span><br></pre></td></tr></table></figure>
@@ -198,617 +202,31 @@
 <p><code>calc_action_value()</code>函数同时使用了reward和概率的信息。对于在训练过程中依赖于这些信息的value iteration方法来说，这并不是一个大问题。但是，之后讲到value iteration方法的扩展，它不需要概率近似，而只需环境样本，对概率的依赖为智能体增加了额外的负担。在Q-learning算法中，智能体只需q值就能做出决定。</p>
 <p>但也不能说v函数是完全无用的，它是actor-critic方法的重要组成部分。然而，在value-based learning领域，q函数无疑是最受欢迎的。关于收敛速度，二者几乎相同（但是Q-learning版本的value table需要四倍以上的内存）。</p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/3-4-FrozenLake%E4%BD%BF%E7%94%A8value-iteration%E6%96%B9%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="cxw">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CXW's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/13/3-4-FrozenLake%E4%BD%BF%E7%94%A8value-iteration%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">3.4 FrozenLake使用value iteration方法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-01-13 15:40:34 / Modified: 21:50:58" itemprop="dateCreated datePublished" datetime="2022-01-13T15:40:34+08:00">2022-01-13</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>﻿之前我们提到了状态价值和动作价值的估计：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/13/3-4-FrozenLake%E4%BD%BF%E7%94%A8value-iteration%E6%96%B9%E6%B3%95/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/3-3-%E4%BB%B7%E5%80%BC%E8%BF%AD%E4%BB%A3%EF%BC%88value-iteration%EF%BC%89%E7%AE%97%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="cxw">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CXW's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/13/3-3-%E4%BB%B7%E5%80%BC%E8%BF%AD%E4%BB%A3%EF%BC%88value-iteration%EF%BC%89%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">3.3 价值迭代（value iteration）算法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-01-13 15:39:43 / Modified: 15:44:11" itemprop="dateCreated datePublished" datetime="2022-01-13T15:39:43+08:00">2022-01-13</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>﻿﻿刚刚的例子很简单，在状态转移图中没有“环”，因此我们可以从末状态开始，计算他的价值，然后回到开始状态。然而，如果环境中有“环”，会给我们带来麻烦：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/13/3-3-%E4%BB%B7%E5%80%BC%E8%BF%AD%E4%BB%A3%EF%BC%88value-iteration%EF%BC%89%E7%AE%97%E6%B3%95/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/13/3-4-FrozenLake%E4%BD%BF%E7%94%A8value-iteration%E6%96%B9%E6%B3%95/" rel="prev" title="3.4 FrozenLake使用value iteration方法">
+      <i class="fa fa-chevron-left"></i> 3.4 FrozenLake使用value iteration方法
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
   
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/3-2-%E5%8A%A8%E4%BD%9C%E4%BB%B7%E5%80%BC%E5%87%BD%E6%95%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="cxw">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CXW's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/13/3-2-%E5%8A%A8%E4%BD%9C%E4%BB%B7%E5%80%BC%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">3.2 动作价值函数</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-01-13 15:38:51 / Modified: 15:41:45" itemprop="dateCreated datePublished" datetime="2022-01-13T15:38:51+08:00">2022-01-13</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>﻿﻿之前介绍的Bellman方程实际上是状态价值函数，$V(s)$。除此之外我们还可以定义动作价值函数$Q(s, a)$，即在状态s执行动作a所获得的总奖励，$Q(s, a)$可以通过$V(s)$来定义，同时也是Q-learning的基础。我们的主要目标是获得每对state和action的Q值。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/13/3-2-%E5%8A%A8%E4%BD%9C%E4%BB%B7%E5%80%BC%E5%87%BD%E6%95%B0/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/3-1-%E8%B4%9D%E5%B0%94%E6%9B%BC%EF%BC%88bellman%EF%BC%89%E6%96%B9%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="cxw">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CXW's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/13/3-1-%E8%B4%9D%E5%B0%94%E6%9B%BC%EF%BC%88bellman%EF%BC%89%E6%96%B9%E7%A8%8B/" class="post-title-link" itemprop="url">3.1 贝尔曼（bellman）方程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-01-13 15:37:45 / Modified: 15:41:35" itemprop="dateCreated datePublished" datetime="2022-01-13T15:37:45+08:00">2022-01-13</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>﻿﻿假设智能体观测到状态$s_0$，并且有$N$个可用action，每个action都会导致另一种状态，及相应的奖励。另外，假设我们知道与状态s0相连的所有状态的价值$V_i$。在这种情况下，智能体可以采取的最佳行动是什么？</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/13/3-1-%E8%B4%9D%E5%B0%94%E6%9B%BC%EF%BC%88bellman%EF%BC%89%E6%96%B9%E7%A8%8B/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="cxw">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CXW's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">2.4 FrozenLake使用cross-entropy方法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-01-13 15:09:27 / Modified: 15:29:20" itemprop="dateCreated datePublished" datetime="2022-01-13T15:09:27+08:00">2022-01-13</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>﻿﻿<a target="_blank" rel="noopener" href="https://gym.openai.com/envs/FrozenLake-v0/">FrozenLake</a>是gym的另一个grid world环境。其环境简单的栅格地图，有四种栅格状态，分别用字母SFHG表示，下面是一个地图的例子：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/2-3-CartPole-v0%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="cxw">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CXW's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/13/2-3-CartPole-v0%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">2.3 CartPole-v0使用cross-entropy方法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-01-13 15:06:34 / Modified: 15:29:23" itemprop="dateCreated datePublished" datetime="2022-01-13T15:06:34+08:00">2022-01-13</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>﻿﻿==<strong>所有代码，可能会因为gym，pytorch甚至python版本的更迭输出可能会不同甚至可能失效，不要因为代码失效而刻意选择特定版本的库，最关键的是理解算法的本质和编程语言的基本特性</strong>==</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/13/2-3-CartPole-v0%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/2-2-cross-entropy/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="cxw">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CXW's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/13/2-2-cross-entropy/" class="post-title-link" itemprop="url">2.2 cross-entropy</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-01-13 15:03:01 / Modified: 15:29:26" itemprop="dateCreated datePublished" datetime="2022-01-13T15:03:01+08:00">2022-01-13</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>﻿﻿交叉熵（cross-entropy）是<strong>model-free，policy-based，on-policy</strong>的强化学习方法。也就是说：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/13/2-2-cross-entropy/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/2-1-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%88%86%E7%B1%BB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="cxw">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CXW's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/13/2-1-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%88%86%E7%B1%BB/" class="post-title-link" itemprop="url">2.1 强化学习分类</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-01-13 15:02:10 / Modified: 15:29:29" itemprop="dateCreated datePublished" datetime="2022-01-13T15:02:10+08:00">2022-01-13</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>﻿##  无模型（Model-free） or 有模型（model-based）</p>
-<p>Model-free意味着该方法不建立环境或奖励的模型；它直接将observation和action连接起来。相反，model-based试图预测下一次observation和/或reward，基于这一预测，智能体选择最佳行动，通常会多次做出预测，来预测更远的未来。</p>
-<p>这两类方法都有各自的优点和缺点，但通常在确定性环境中使用model-based方法，例如有严格规则的棋类游戏。另一方面，Model-free方法通常更容易训练，因为很难对复杂环境、多样的观测建模。我们一般说的算法都是Model-free的 ，因为这些方法在近些年一直是学术界研究的热点。最近，<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1707.06203">deepmind的开始研究将两类算法混合使用的好处</a>。</p>
-<h2 id="基于价值（Value-based）-or-基于策略（policy-based）"><a href="#基于价值（Value-based）-or-基于策略（policy-based）" class="headerlink" title="基于价值（Value-based） or 基于策略（policy-based）"></a>基于价值（Value-based） or 基于策略（policy-based）</h2><p>policy-based方法直接估计智能体的策略，即只能用在每一步应该执行哪些actions，策略通常由actions的概率分布表示，最后按照该概率分布抽样出要执行的action。相反，Value-based方法，智能体计算每个action的价值，并选择具有最佳价值的action，而不是其概率。</p>
-<h2 id="On-policy-or-off-policy"><a href="#On-policy-or-off-policy" class="headerlink" title="On-policy or off-policy"></a>On-policy or off-policy</h2><p>现在只用知道off-policy是一种从历史数据中学习的能力（比如人类的演示，或别的智能体的操作）。 </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="cxw">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CXW's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/" class="post-title-link" itemprop="url">1.3 马尔可夫过程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-01-13 14:43:17 / Modified: 15:29:31" itemprop="dateCreated datePublished" datetime="2022-01-13T14:43:17+08:00">2022-01-13</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>﻿﻿之前介绍的奖励、智能体、动作、观察和环境可以看成RL的一级概念。以此为基础，我们将探索RL的二级概念，包括状态（state）、事件（episode）、历史（history）、价值（value）和收益（gain/return）。</p>
-<p>我们从最简单的马尔可夫过程（MP）开始，然后加入奖励（reward）扩展它，变成马尔可夫奖励过程（Markov reward process）。然后添加行动（action），实现马尔可夫决策过程（Markov decision processes，MDP）。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
 
 
 
