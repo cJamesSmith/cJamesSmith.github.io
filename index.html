@@ -145,6 +145,64 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/15/4-1-%E8%BF%9B%E4%B8%80%E6%AD%A5%E5%88%86%E6%9E%90value-iteration/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="cxw">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CXW's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/15/4-1-%E8%BF%9B%E4%B8%80%E6%AD%A5%E5%88%86%E6%9E%90value-iteration/" class="post-title-link" itemprop="url">4.1 进一步分析value iteration</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-01-15 14:50:26 / Modified: 14:50:51" itemprop="dateCreated datePublished" datetime="2022-01-15T14:50:26+08:00">2022-01-15</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/15/3-6-%E6%80%BB%E7%BB%93/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -750,69 +808,6 @@ Q\left(s, a\right) = r\left(s, a\right) + \gamma V\left(s'\right)=r\left(s, a\ri
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/2-1-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%88%86%E7%B1%BB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="cxw">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CXW's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/13/2-1-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%88%86%E7%B1%BB/" class="post-title-link" itemprop="url">2.1 强化学习分类</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-01-13 15:02:10 / Modified: 15:29:29" itemprop="dateCreated datePublished" datetime="2022-01-13T15:02:10+08:00">2022-01-13</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>﻿##  无模型（Model-free） or 有模型（model-based）</p>
-<p>Model-free意味着该方法不建立环境或奖励的模型；它直接将observation和action连接起来。相反，model-based试图预测下一次observation和/或reward，基于这一预测，智能体选择最佳行动，通常会多次做出预测，来预测更远的未来。</p>
-<p>这两类方法都有各自的优点和缺点，但通常在确定性环境中使用model-based方法，例如有严格规则的棋类游戏。另一方面，Model-free方法通常更容易训练，因为很难对复杂环境、多样的观测建模。我们一般说的算法都是Model-free的 ，因为这些方法在近些年一直是学术界研究的热点。最近，<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1707.06203">deepmind的开始研究将两类算法混合使用的好处</a>。</p>
-<h2 id="基于价值（Value-based）-or-基于策略（policy-based）"><a href="#基于价值（Value-based）-or-基于策略（policy-based）" class="headerlink" title="基于价值（Value-based） or 基于策略（policy-based）"></a>基于价值（Value-based） or 基于策略（policy-based）</h2><p>policy-based方法直接估计智能体的策略，即只能用在每一步应该执行哪些actions，策略通常由actions的概率分布表示，最后按照该概率分布抽样出要执行的action。相反，Value-based方法，智能体计算每个action的价值，并选择具有最佳价值的action，而不是其概率。</p>
-<h2 id="On-policy-or-off-policy"><a href="#On-policy-or-off-policy" class="headerlink" title="On-policy or off-policy"></a>On-policy or off-policy</h2><p>现在只用知道off-policy是一种从历史数据中学习的能力（比如人类的演示，或别的智能体的操作）。 </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -882,12 +877,17 @@ Q\left(s, a\right) = r\left(s, a\right) + \gamma V\left(s'\right)=r\left(s, a\ri
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:xwc@zju.edu.cn" title="E-Mail → mailto:xwc@zju.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
 
 
 
