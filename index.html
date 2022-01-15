@@ -145,6 +145,75 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/15/3-6-%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="cxw">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CXW's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/15/3-6-%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">3.6 总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-01-15 14:11:08 / Modified: 14:24:51" itemprop="dateCreated datePublished" datetime="2022-01-15T14:11:08+08:00">2022-01-15</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>从贝尔曼方程开始：</p>
+<script type="math/tex; mode=display">
+V_0 = \max \left( r_a + \gamma V_a \right)</script><p>考虑环境的不确定性：</p>
+<script type="math/tex; mode=display">
+V_0\left( a \right) =\mathbb{E}_{s\sim S}\left[ r_{s,a}+\gamma V_s \right] =\sum_{s\in S}{p_{a,0\rightarrow s}\left( r_{s,a}+\gamma V_s \right)}</script><p>一般情形下的Bellman方程：</p>
+<script type="math/tex; mode=display">
+V_0\left( a \right) =\max_{a\in A}\sum_{s\in S}{p_{a,0\rightarrow s}\left( r_{s,a}+\gamma V_s \right)}</script><p>value iteration算法：</p>
+<script type="math/tex; mode=display">
+Q\left(s,a\right) = \sum_{s' \in S}{p_{a,s\rightarrow s'}\left( r_{s,a}+\gamma V_{s'} \right)}</script><script type="math/tex; mode=display">
+V\left(s\right)=\max_{a\in A}Q\left(s,a\right)</script><p>Q-learning算法：</p>
+<script type="math/tex; mode=display">
+Q\left(s, a\right) = r\left(s, a\right) + \gamma V\left(s'\right)=r\left(s, a\right) + \gamma \max_{a'\in A}Q\left(s',a'\right)</script><label style="color:red">注意，$r\left(s,a\right)$是指状态$s$采取动作$a$到达状态$s'$的reward，实际上是三个变量的函数（因为要考虑环境的不确定性）</label>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/14/3-5-FrozenLake%E4%BD%BF%E7%94%A8Q-learning%E6%96%B9%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -176,7 +245,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-01-15 11:15:00" itemprop="dateModified" datetime="2022-01-15T11:15:00+08:00">2022-01-15</time>
+                <time title="Modified: 2022-01-15 14:11:22" itemprop="dateModified" datetime="2022-01-15T14:11:22+08:00">2022-01-15</time>
               </span>
 
           
@@ -190,14 +259,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>Q-learning方法和value-iteration方法实现起来没有太大改动。最明显的变化是对value table的改变。在之前的示例中，我们储存的是state的reward，所以字典中的键是state，现在我们需要存储$Q(s,a)$的值，它有两个参数：state和action，所以键现在是一个复合键。</p>
-<p>第二个区别在于<code>calc_action_value()</code>函数。Q-learning不再需要它了，因为其动作价值存储在value table中。</p>
-<p>最后，代码实现中最重要的变化是value_iteration()方法。以前，它只是调用calc_action_value()包装起来的函数，目的是近似bellman方程，现在，由于这个函数已经被value table所取代，所以我们需要在value_iteration()方法中做这个近似。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ctypes.wintypes <span class="keyword">import</span> tagMSG</span><br><span class="line"><span class="keyword">import</span> gym</span><br><span class="line"><span class="keyword">import</span> collections</span><br><span class="line"><span class="keyword">from</span> tensorboardX <span class="keyword">import</span> SummaryWriter</span><br><span class="line"></span><br><span class="line">ENV_NAMES = [<span class="string">&#x27;FrozenLake-v1&#x27;</span>, <span class="string">&#x27;FrozenLake8x8-v1&#x27;</span>]</span><br><span class="line">ENV_ID = <span class="number">1</span></span><br><span class="line">GAMMA = <span class="number">0.9</span></span><br><span class="line">TEST_EPISODES = <span class="number">20</span></span><br><span class="line">RANDOM_STEPS = <span class="number">500</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Agent</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.env = gym.make(ENV_NAMES[ENV_ID])</span><br><span class="line">        self.state = self.env.reset()  <span class="comment"># 获得初始observation</span></span><br><span class="line">        self.rewards = collections.defaultdict(<span class="built_in">float</span>)  <span class="comment"># reward table</span></span><br><span class="line">        self.transits = collections.defaultdict(collections.Counter)  <span class="comment"># transitions table</span></span><br><span class="line">        self.values = collections.defaultdict(<span class="built_in">float</span>)  <span class="comment"># value table</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">play_n_random_steps</span>(<span class="params">self, count</span>):</span></span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        从环境中收集随机经验，并更新rewards和transits table。</span></span><br><span class="line"><span class="string">        注意，我们不需要等到episode结束才开始学习。我们只需要执行N步，记住结果。</span></span><br><span class="line"><span class="string">        这是value iteration和cross-entropy的区别之一，cross-entropy只能学习完整的episode</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(count):</span><br><span class="line">            action = self.env.action_space.sample()</span><br><span class="line">            new_state, reward, done, _ = self.env.step(action)</span><br><span class="line">            self.rewards[(self.state, action, new_state)] = reward</span><br><span class="line">            self.transits[(self.state, action)][new_state] += <span class="number">1</span></span><br><span class="line">            self.state = self.env.reset() <span class="keyword">if</span> done <span class="keyword">else</span> new_state</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">select_action</span>(<span class="params">self, state</span>):</span></span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        选取最佳action</span></span><br><span class="line"><span class="string">        迭代环境中的所有可能的action，并计算每个action的value</span></span><br><span class="line"><span class="string">        返回具有最大value的action</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        best_action, best_value = <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line">        <span class="keyword">for</span> action <span class="keyword">in</span> <span class="built_in">range</span>(self.env.action_space.n):</span><br><span class="line">            action_value = self.values[(state, action)]</span><br><span class="line">            <span class="keyword">if</span> best_value <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">or</span> best_value &lt; action_value:</span><br><span class="line">                best_value = action_value</span><br><span class="line">                best_action = action</span><br><span class="line">        <span class="keyword">return</span> best_action</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">play_episode</span>(<span class="params">self, env: gym.Env</span>):</span></span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        使用最佳action，并使用传入的环境跑一个完整的episode</span></span><br><span class="line"><span class="string">        我们不想干扰原有用于收集随机数据的环境的当前状态</span></span><br><span class="line"><span class="string">        因此，使用作为参数传递的第二个环境</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        total_reward = <span class="number">0.0</span></span><br><span class="line">        state = env.reset()</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            action = self.select_action(state)</span><br><span class="line">            new_state, reward, done, _ = env.step(action)</span><br><span class="line">            self.rewards[(state, action, new_state)] = reward</span><br><span class="line">            self.transits[(state, action)][new_state] += <span class="number">1</span></span><br><span class="line">            total_reward += reward</span><br><span class="line">            state = new_state</span><br><span class="line">            <span class="keyword">if</span> done:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">return</span> total_reward</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">value_iteration</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">        value iteration的实现</span></span><br><span class="line"><span class="string">        Q(s,a)的更新</span></span><br><span class="line"><span class="string">        与calc_action_value()非常相似，事实上，它们做的几乎是相同的事情。</span></span><br><span class="line"><span class="string">        对于给定的state和action，它需要使用已有的统计信息来计算这个action value。</span></span><br><span class="line"><span class="string">        之前我们将它存储在value table中，现在不能再这样做了，</span></span><br><span class="line"><span class="string">        所以我们必须调用select_action方法，它会为我们选择q值最大的action，</span></span><br><span class="line"><span class="string">        然后把这个q值作为target state的value。</span></span><br><span class="line"><span class="string">        &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">for</span> state <span class="keyword">in</span> <span class="built_in">range</span>(self.env.observation_space.n):</span><br><span class="line">            <span class="keyword">for</span> action <span class="keyword">in</span> <span class="built_in">range</span>(self.env.action_space.n):</span><br><span class="line">                action_value = <span class="number">0.0</span></span><br><span class="line">                target_counts = self.transits[(state, action)]</span><br><span class="line">                total = <span class="built_in">sum</span>(target_counts.values())</span><br><span class="line">                <span class="keyword">for</span> tgt_state, count <span class="keyword">in</span> target_counts.items():</span><br><span class="line">                    key = (state, action, tgt_state)</span><br><span class="line">                    reward = self.rewards[key]</span><br><span class="line">                    best_action = self.select_action(tgt_state)</span><br><span class="line">                    val = reward + GAMMA * self.values[(tgt_state, best_action)]</span><br><span class="line">                    action_value += (count/total)*val</span><br><span class="line">                self.values[(state, action)] = action_value</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    test_env = gym.make(ENV_NAMES[ENV_ID])</span><br><span class="line">    agent = Agent()</span><br><span class="line">    writer = SummaryWriter(comment=<span class="string">&#x27;-v-iteration&#x27;</span>)</span><br><span class="line">    iter_no = <span class="number">0</span></span><br><span class="line">    best_reward = <span class="number">0.0</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        iter_no += <span class="number">1</span></span><br><span class="line">        agent.play_n_random_steps(RANDOM_STEPS)  <span class="comment"># 首先随机执行100个step，用新的数据填充reward_table和transits_table</span></span><br><span class="line">        agent.value_iteration()  <span class="comment"># 然后执行value_iteration操作</span></span><br><span class="line">        reward = <span class="number">0.0</span></span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(TEST_EPISODES):</span><br><span class="line">            reward += agent.play_episode(test_env)</span><br><span class="line">        reward /= TEST_EPISODES</span><br><span class="line">        writer.add_scalar(<span class="string">&#x27;reward&#x27;</span>, reward, iter_no)</span><br><span class="line">        <span class="keyword">if</span> reward &gt; best_reward:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Best reward updated %.3f -&gt; %.3f&quot;</span> % (best_reward, reward))</span><br><span class="line">            best_reward = reward</span><br><span class="line">        <span class="keyword">if</span> reward &gt; <span class="number">0.80</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Solved in %d iterations!&quot;</span> % iter_no)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    writer.close()</span><br></pre></td></tr></table></figure>
-<p>正如我所说的，我们去掉了<code>calc_action_value()</code>方法，因此，为了选择一个action，我们只需遍历所有action，并在value table中查找它们的value。这看起来可能只是一个小改进，但是考虑一下<code>calc_action_value()</code>中使用的数据，就会发现为什么在RL中学习q函数比学习v函数更流行。</p>
-<p><code>calc_action_value()</code>函数同时使用了reward和概率的信息。对于在训练过程中依赖于这些信息的value iteration方法来说，这并不是一个大问题。但是，之后讲到value iteration方法的扩展，它不需要概率近似，而只需环境样本，对概率的依赖为智能体增加了额外的负担。在Q-learning算法中，智能体只需q值就能做出决定。</p>
-<p>但也不能说v函数是完全无用的，它是actor-critic方法的重要组成部分。然而，在value-based learning领域，q函数无疑是最受欢迎的。关于收敛速度，二者几乎相同（但是Q-learning版本的value table需要四倍以上的内存）。</p>
-
+          <p>Q-learning方法和value-iteration方法实现起来没有太大改动。最明显的变化是对value table的改变。在之前的示例中，我们储存的是state的reward，所以字典中的键是state，现在我们需要存储$Q(s,a)$的值，它有两个参数：state和action，所以键现在是一个复合键。<br></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/14/3-5-FrozenLake%E4%BD%BF%E7%94%A8Q-learning%E6%96%B9%E6%B3%95/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -437,10 +507,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2022-01-13 15:37:45 / Modified: 15:41:35" itemprop="dateCreated datePublished" datetime="2022-01-13T15:37:45+08:00">2022-01-13</time>
+              <time title="Created: 2022-01-13 15:37:45" itemprop="dateCreated datePublished" datetime="2022-01-13T15:37:45+08:00">2022-01-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-15 13:57:02" itemprop="dateModified" datetime="2022-01-15T13:57:02+08:00">2022-01-15</time>
+              </span>
 
           
 
@@ -453,7 +529,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>﻿﻿假设智能体观测到状态$s_0$，并且有$N$个可用action，每个action都会导致另一种状态，及相应的奖励。另外，假设我们知道与状态s0相连的所有状态的价值$V_i$。在这种情况下，智能体可以采取的最佳行动是什么？</p>
+          <p>假设智能体观测到状态$s_0$，并且有$N$个可用action，每个action都会导致另一种状态，及相应的奖励。另外，假设我们知道与状态s0相连的所有状态的价值$V_i$。在这种情况下，智能体可以采取的最佳行动是什么？</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2022/01/13/3-1-%E8%B4%9D%E5%B0%94%E6%9B%BC%EF%BC%88bellman%EF%BC%89%E6%96%B9%E7%A8%8B/#more" rel="contents">
@@ -737,73 +813,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="cxw">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CXW's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/" class="post-title-link" itemprop="url">1.3 马尔可夫过程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-01-13 14:43:17 / Modified: 15:29:31" itemprop="dateCreated datePublished" datetime="2022-01-13T14:43:17+08:00">2022-01-13</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>﻿﻿之前介绍的奖励、智能体、动作、观察和环境可以看成RL的一级概念。以此为基础，我们将探索RL的二级概念，包括状态（state）、事件（episode）、历史（history）、价值（value）和收益（gain/return）。</p>
-<p>我们从最简单的马尔可夫过程（MP）开始，然后加入奖励（reward）扩展它，变成马尔可夫奖励过程（Markov reward process）。然后添加行动（action），实现马尔可夫决策过程（Markov decision processes，MDP）。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/13/1-3-%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -873,7 +882,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

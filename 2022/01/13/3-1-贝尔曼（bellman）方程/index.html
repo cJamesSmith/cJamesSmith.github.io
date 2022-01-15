@@ -30,7 +30,7 @@
 <meta property="og:image" content="http://example.com/2022/01/13/3-1-%E8%B4%9D%E5%B0%94%E6%9B%BC%EF%BC%88bellman%EF%BC%89%E6%96%B9%E7%A8%8B/image-20220113120738967.png">
 <meta property="og:image" content="http://example.com/2022/01/13/3-1-%E8%B4%9D%E5%B0%94%E6%9B%BC%EF%BC%88bellman%EF%BC%89%E6%96%B9%E7%A8%8B/13286520657643781.png">
 <meta property="article:published_time" content="2022-01-13T07:37:45.000Z">
-<meta property="article:modified_time" content="2022-01-13T07:41:35.733Z">
+<meta property="article:modified_time" content="2022-01-15T05:57:02.288Z">
 <meta property="article:author" content="cxw">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2022/01/13/3-1-%E8%B4%9D%E5%B0%94%E6%9B%BC%EF%BC%88bellman%EF%BC%89%E6%96%B9%E7%A8%8B/image-20220113120738967.png">
@@ -175,10 +175,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2022-01-13 15:37:45 / Modified: 15:41:35" itemprop="dateCreated datePublished" datetime="2022-01-13T15:37:45+08:00">2022-01-13</time>
+              <time title="Created: 2022-01-13 15:37:45" itemprop="dateCreated datePublished" datetime="2022-01-13T15:37:45+08:00">2022-01-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-15 13:57:02" itemprop="dateModified" datetime="2022-01-15T13:57:02+08:00">2022-01-15</time>
+              </span>
 
           
 
@@ -191,7 +197,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>﻿﻿假设智能体观测到状态$s_0$，并且有$N$个可用action，每个action都会导致另一种状态，及相应的奖励。另外，假设我们知道与状态s0相连的所有状态的价值$V_i$。在这种情况下，智能体可以采取的最佳行动是什么？</p>
+        <p>假设智能体观测到状态$s_0$，并且有$N$个可用action，每个action都会导致另一种状态，及相应的奖励。另外，假设我们知道与状态s0相连的所有状态的价值$V_i$。在这种情况下，智能体可以采取的最佳行动是什么？</p>
 <span id="more"></span>
 <p><img src="/2022/01/13/3-1-%E8%B4%9D%E5%B0%94%E6%9B%BC%EF%BC%88bellman%EF%BC%89%E6%96%B9%E7%A8%8B/image-20220113120738967.png" alt="image-20220113120738967"></p>
 <p>如果选择动作$a_i$，价值为$V_0(a=a_i)=r_i+V_i$，如果要选择最佳动作，既要保证$a_i$满足$V_0=\max_{a\in1,\cdots,N}(r_a+V_a)$，如果考虑折扣因子的话就变成</p>
@@ -203,7 +209,7 @@ V_0=\max_{a\in1,\cdots,N}(r_a+\gamma V_a)</script><p>这个式子就是<strong>�
 <script type="math/tex; mode=display">
 V_0(a=1)=p_1(r_1+\gamma V_1)+p_2(r_2+\gamma V_2)+p_3(r_3+\gamma V_3)</script><p>用数学语言表述为</p>
 <script type="math/tex; mode=display">
-V_0\left( a \right) =\mathbb{E}_{s\sim S}\left[ r_{s,a}+\gamma V_s \right] =\sum_{s\in S}{p_{a,0\rightarrow s}\left( r_{s,a}+\gamma V_s \right)}</script><p>式中$p_{a,i\rightarrow j}$表示从状态$i$采取动作$a$转移到状态$j$的概率</p>
+V_0\left( a \right) =\mathbb{E}_{s\sim S}\left[ r_{s,a}+\gamma V_s \right] =\sum_{s\in S}{p_{a,0\rightarrow s}\left( r_{s,a}+\gamma V_s \right)}</script><p>式中$p_{a,i\rightarrow j}$表示从状态$i$采取动作$a$转移到状态$j$的概率。此外，准确的说，<label style="color:red">式中$r_{s,a}$应该是$r_{0,a,s}$，是与始末状态、动作都有关的函数。</label></p>
 <p>同时我们考虑贝尔曼方程，就得到了一般情况下的贝尔曼最优方程</p>
 <script type="math/tex; mode=display">
 V_0=\underset{a\in A}{\max}\mathbb{E}_{s\sim S}\left[ r_{s,a}+\gamma V_s \right] =\underset{a\in A}{\max}\sum_{s\in S}{p_{a,0\rightarrow s}\left( r_{s,a}+\gamma V_s \right)}</script>
@@ -299,7 +305,7 @@ V_0=\underset{a\in A}{\max}\mathbb{E}_{s\sim S}\left[ r_{s,a}+\gamma V_s \right]
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
