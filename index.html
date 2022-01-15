@@ -113,6 +113,11 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
@@ -170,7 +175,16 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-01-15 16:54:17 / Modified: 19:07:48" itemprop="dateCreated datePublished" datetime="2022-01-15T16:54:17+08:00">2022-01-15</time>
+              <time title="Created: 2022-01-15 16:54:17 / Modified: 21:17:24" itemprop="dateCreated datePublished" datetime="2022-01-15T16:54:17+08:00">2022-01-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reinforcement-learning/" itemprop="url" rel="index"><span itemprop="name">reinforcement_learning</span></a>
+                </span>
             </span>
 
           
@@ -185,27 +199,14 @@
 
       
           <p>我们真的需要遍历状态空间中的每个状态吗？如果有些状态永远都不可能出现在环境中，我们为什么要关心它们的价值呢？我们只需要可能出现的状态的价值，这样可以节省大量的工作。这样对value-iteration方法修改后称为Q-learing，特点是把显式状态映射到价值，它有以下步骤：</p>
-<ol>
-<li>从一个空表开始，将状态映射到动作价值。</li>
-<li>通过与环境的交互，获得元组$s、a、r、s’$（状态、动作、奖励和新状态）。然后根据policy决定采取什么action。</li>
-<li>使用Bellman公式迭代近似$Q(s,a)$:<script type="math/tex; mode=display">
-Q(s,a)\leftarrow r+\gamma\max_{a'\in A}Q(s',a')</script></li>
-<li>回到第2步</li>
-</ol>
-<p>在value-iteration中，循环结束的条件是某个阈值，或者估计policy的平均reward。</p>
-<p>需要注意的是更新q值的方法。当从环境中获取样本时，直接用新的q值代替现有q值并不是一个好方法，因为训练可能会变得不稳定。在实践中通常做的是使用加权近似更新q值，引入学习率参数$\alpha\in(0,1)$：</p>
-<script type="math/tex; mode=display">
-Q(s,a) \leftarrow (1-\alpha)Q(s,a)+\alpha(r+\gamma\max_{a'\in A}Q(s',a'))</script><p>即使环境中又噪声，加权的方法也能使训练过程变得平滑，于是Q-learning的流程如下：</p>
-<ol>
-<li>初始化$Q(s,a)$为一张空表格</li>
-<li>从环境中获得$(s,a,r,s’)$</li>
-<li>使用bellman公式更新q值：<script type="math/tex; mode=display">
-Q(s,a) \leftarrow (1-\alpha)Q(s,a)+\alpha(r+\gamma\max_{a'\in A}Q(s',a'))</script></li>
-<li>检验收敛条件，如果不满足，回到第2步</li>
-</ol>
-<p>因为这个方法的q值都存在表格中，所以又叫做<label style="color:red">tabular q-learning</label></p>
-<p>下面在FrozenLake环境中实现</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/15/4-2-Tabular-Q-learning/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -249,7 +250,16 @@ Q(s,a) \leftarrow (1-\alpha)Q(s,a)+\alpha(r+\gamma\max_{a'\in A}Q(s',a'))</scrip
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-01-15 14:50:26 / Modified: 16:52:32" itemprop="dateCreated datePublished" datetime="2022-01-15T14:50:26+08:00">2022-01-15</time>
+              <time title="Created: 2022-01-15 14:50:26 / Modified: 21:17:24" itemprop="dateCreated datePublished" datetime="2022-01-15T14:50:26+08:00">2022-01-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reinforcement-learning/" itemprop="url" rel="index"><span itemprop="name">reinforcement_learning</span></a>
+                </span>
             </span>
 
           
@@ -264,12 +274,14 @@ Q(s,a) \leftarrow (1-\alpha)Q(s,a)+\alpha(r+\gamma\max_{a'\in A}Q(s',a'))</scrip
 
       
           <p>我们在Frozenlake环境中从cross-entropy方法再到value-iteration方法所得到的提升是相当大的，所以我们在想能不能将value-iteration方法应用于更具有挑战性的问题。在那之前，我们首先来看看value-iteration方法的假设和限制。</p>
-<p>首先快速回顾一下这个方法。在每一步中，value-iteration对所有state进行遍历，对于每个state，它使用贝尔曼公式近似计算状态价值。对q值（动作价值）的操作也几乎是相同的，我们近似并存储了每个状态和动作的value。那么，这个过程有什么问题呢？</p>
-<p>第一个显然的问题是环境状态的维数和计算机的迭代能力。在value-iteration中，我们假设预先知道环境中的所有状态，可以遍历它们，并可以存储与状态价值的近似值。这对于简单的网格世界环境来说是容易办到的，但是其他的任务呢？</p>
-<p>首先，估算一下value-iteration方法的可扩展性，或者，换句话说，我们可以在每次循环中迭代多少种状态。假设我们手中的PC电脑可以在内存中存储数十亿个浮点值（32GB内存可以存储85亿个），所以value table所需的内存并不是主要限制。对数十亿个状态和行动的迭代将更加需要CPU的算力，但也不成问题，如今，PC电脑的多核系统大多是空闲的。真正的问题是得到状态转移矩阵的近似所需的样本数量。想象一下，有一个环境有10亿个状态（这大约相当于一个31600×31600大小的Frozenlake）。为了得到这种环境中每一种状态转移概率的近似，我们还需要采样数千亿次，这是不实际的。</p>
-<p>我们考虑一个实际的例子——Atari 2600游戏机。以现在的游戏标准来看，Atari游戏已经过时了，但它提供了一系列优秀的RL问题，人类玩家可以快速解决这些问题，但对电脑来说仍然是一个挑战。这个平台也成为了RL研究中一个非常流行的baseline。我们来计算一下Atari的状态空间。屏幕的分辨率为$210×160$像素，每个像素有128种颜色。因此，屏幕的每一帧有$210×160=33600$像素，不同颜色像素的排列组合总数是$128^{33600}$，略高于$10^{70802}$。如果要遍历Atari的所有状态，即使是最快的超级计算机也需要数<label style="color:red">十亿亿年</label>的时间。此外，99%的工作都是浪费时间，因为大多数像素颜色组合更本就不会在游戏中出现。</p>
-<p>value-iteration方法的另一个问题是，它限制了动作空间必须是离散的。而不是针对连续控制问题，在连续控制问题中，状态或动作是连续值，如方向盘的角度，执行器上的力，或加热器的温度。这个问题比第一个问题更具挑战性，我们后面会讨论连续控制问题。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/15/4-1-%E8%BF%9B%E4%B8%80%E6%AD%A5%E5%88%86%E6%9E%90value-iteration/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -313,7 +325,16 @@ Q(s,a) \leftarrow (1-\alpha)Q(s,a)+\alpha(r+\gamma\max_{a'\in A}Q(s',a'))</scrip
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-01-15 14:11:08 / Modified: 14:24:51" itemprop="dateCreated datePublished" datetime="2022-01-15T14:11:08+08:00">2022-01-15</time>
+              <time title="Created: 2022-01-15 14:11:08 / Modified: 21:17:24" itemprop="dateCreated datePublished" datetime="2022-01-15T14:11:08+08:00">2022-01-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reinforcement-learning/" itemprop="url" rel="index"><span itemprop="name">reinforcement_learning</span></a>
+                </span>
             </span>
 
           
@@ -388,8 +409,17 @@ Q\left(s, a\right) = r\left(s, a\right) + \gamma V\left(s'\right)=r\left(s, a\ri
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-01-15 14:11:22" itemprop="dateModified" datetime="2022-01-15T14:11:22+08:00">2022-01-15</time>
+                <time title="Modified: 2022-01-15 21:17:24" itemprop="dateModified" datetime="2022-01-15T21:17:24+08:00">2022-01-15</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reinforcement-learning/" itemprop="url" rel="index"><span itemprop="name">reinforcement_learning</span></a>
+                </span>
+            </span>
 
           
 
@@ -452,9 +482,24 @@ Q\left(s, a\right) = r\left(s, a\right) + \gamma V\left(s'\right)=r\left(s, a\ri
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2022-01-13 15:40:34 / Modified: 21:50:58" itemprop="dateCreated datePublished" datetime="2022-01-13T15:40:34+08:00">2022-01-13</time>
+              <time title="Created: 2022-01-13 15:40:34" itemprop="dateCreated datePublished" datetime="2022-01-13T15:40:34+08:00">2022-01-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-15 21:17:24" itemprop="dateModified" datetime="2022-01-15T21:17:24+08:00">2022-01-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reinforcement-learning/" itemprop="url" rel="index"><span itemprop="name">reinforcement_learning</span></a>
+                </span>
             </span>
 
           
@@ -518,9 +563,24 @@ Q\left(s, a\right) = r\left(s, a\right) + \gamma V\left(s'\right)=r\left(s, a\ri
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2022-01-13 15:39:43 / Modified: 15:44:11" itemprop="dateCreated datePublished" datetime="2022-01-13T15:39:43+08:00">2022-01-13</time>
+              <time title="Created: 2022-01-13 15:39:43" itemprop="dateCreated datePublished" datetime="2022-01-13T15:39:43+08:00">2022-01-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-15 21:17:24" itemprop="dateModified" datetime="2022-01-15T21:17:24+08:00">2022-01-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reinforcement-learning/" itemprop="url" rel="index"><span itemprop="name">reinforcement_learning</span></a>
+                </span>
             </span>
 
           
@@ -584,9 +644,24 @@ Q\left(s, a\right) = r\left(s, a\right) + \gamma V\left(s'\right)=r\left(s, a\ri
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2022-01-13 15:38:51 / Modified: 15:41:45" itemprop="dateCreated datePublished" datetime="2022-01-13T15:38:51+08:00">2022-01-13</time>
+              <time title="Created: 2022-01-13 15:38:51" itemprop="dateCreated datePublished" datetime="2022-01-13T15:38:51+08:00">2022-01-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-15 21:17:24" itemprop="dateModified" datetime="2022-01-15T21:17:24+08:00">2022-01-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reinforcement-learning/" itemprop="url" rel="index"><span itemprop="name">reinforcement_learning</span></a>
+                </span>
             </span>
 
           
@@ -658,8 +733,17 @@ Q\left(s, a\right) = r\left(s, a\right) + \gamma V\left(s'\right)=r\left(s, a\ri
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-01-15 13:57:02" itemprop="dateModified" datetime="2022-01-15T13:57:02+08:00">2022-01-15</time>
+                <time title="Modified: 2022-01-15 21:17:24" itemprop="dateModified" datetime="2022-01-15T21:17:24+08:00">2022-01-15</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reinforcement-learning/" itemprop="url" rel="index"><span itemprop="name">reinforcement_learning</span></a>
+                </span>
+            </span>
 
           
 
@@ -722,9 +806,24 @@ Q\left(s, a\right) = r\left(s, a\right) + \gamma V\left(s'\right)=r\left(s, a\ri
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2022-01-13 15:09:27 / Modified: 15:29:20" itemprop="dateCreated datePublished" datetime="2022-01-13T15:09:27+08:00">2022-01-13</time>
+              <time title="Created: 2022-01-13 15:09:27" itemprop="dateCreated datePublished" datetime="2022-01-13T15:09:27+08:00">2022-01-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-15 21:17:24" itemprop="dateModified" datetime="2022-01-15T21:17:24+08:00">2022-01-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reinforcement-learning/" itemprop="url" rel="index"><span itemprop="name">reinforcement_learning</span></a>
+                </span>
             </span>
 
           
@@ -788,9 +887,24 @@ Q\left(s, a\right) = r\left(s, a\right) + \gamma V\left(s'\right)=r\left(s, a\ri
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2022-01-13 15:06:34 / Modified: 15:29:23" itemprop="dateCreated datePublished" datetime="2022-01-13T15:06:34+08:00">2022-01-13</time>
+              <time title="Created: 2022-01-13 15:06:34" itemprop="dateCreated datePublished" datetime="2022-01-13T15:06:34+08:00">2022-01-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-15 21:17:24" itemprop="dateModified" datetime="2022-01-15T21:17:24+08:00">2022-01-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reinforcement-learning/" itemprop="url" rel="index"><span itemprop="name">reinforcement_learning</span></a>
+                </span>
             </span>
 
           
@@ -900,9 +1014,18 @@ Q\left(s, a\right) = r\left(s, a\right) + \gamma V\left(s'\right)=r\left(s, a\ri
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
   </nav>
 </div>
   <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cjamessmith" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;cjamessmith" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
       <span class="links-of-author-item">
         <a href="mailto:xwc@zju.edu.cn" title="E-Mail → mailto:xwc@zju.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
       </span>
@@ -935,8 +1058,6 @@ Q\left(s, a\right) = r\left(s, a\right) + \gamma V\left(s'\right)=r\left(s, a\ri
   </span>
   <span class="author" itemprop="copyrightHolder">cxw</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
-  </div>
 
         
 
