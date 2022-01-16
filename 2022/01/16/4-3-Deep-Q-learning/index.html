@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="tabular q-learning方法解决了对整个状态空间的迭代问题，但如果可观测状态空间的维数非常大的情况下，tabular q-learning也很难搞定了。例如，FrozenLake8x8的环境，地图大小是原来的四倍，迭代次数却远不止4倍。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="4.3 Deep Q-learning">
+<meta property="og:url" content="http://example.com/2022/01/16/4-3-Deep-Q-learning/index.html">
+<meta property="og:site_name" content="CXW&#39;s Blog">
+<meta property="og:description" content="tabular q-learning方法解决了对整个状态空间的迭代问题，但如果可观测状态空间的维数非常大的情况下，tabular q-learning也很难搞定了。例如，FrozenLake8x8的环境，地图大小是原来的四倍，迭代次数却远不止4倍。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/01/16/4-3-Deep-Q-learning/image-20220116104021153.png">
+<meta property="og:image" content="http://example.com/2022/01/16/4-3-Deep-Q-learning/13286774721342762.jpeg">
+<meta property="article:published_time" content="2022-01-16T02:29:42.000Z">
+<meta property="article:modified_time" content="2022-01-16T08:30:08.143Z">
+<meta property="article:author" content="cxw">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/01/16/4-3-Deep-Q-learning/image-20220116104021153.png">
+
+<link rel="canonical" href="http://example.com/2022/01/16/4-3-Deep-Q-learning/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>4.3 Deep Q-learning | CXW's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">CXW's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/16/4-3-Deep-Q-learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="cxw">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CXW's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          4.3 Deep Q-learning
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-01-16 10:29:42 / Modified: 16:30:08" itemprop="dateCreated datePublished" datetime="2022-01-16T10:29:42+08:00">2022-01-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reinforcement-learning/" itemprop="url" rel="index"><span itemprop="name">reinforcement_learning</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>tabular q-learning方法解决了对整个状态空间的迭代问题，但如果可观测状态空间的维数非常大的情况下，tabular q-learning也很难搞定了。例如，FrozenLake8x8的环境，地图大小是原来的四倍，迭代次数却远不止4倍。</p>
+<span id="more"></span>
+<p><img src="/2022/01/16/4-3-Deep-Q-learning/image-20220116104021153.png" alt="8x8的地图迭代了将近76K次"></p>
+<p>对于Atari环境来说，由于像素组合方式之多，状态空间维数更是近乎无穷大。但是单一像素的变化并不会造成太大的区别，所以可以将两个差别不大的图像视为同一个状态，这样可以压缩状态空间的维数。然而，我们仍然需要区分一些状态。我们举一个简单的例子。</p>
+<p>下图显示了Atari Pong环境中的两种不同情况。我们通过控制球拍来与AI对手对抗（我们在右边，AI在左边）。</p>
+<p><img src="/2022/01/16/4-3-Deep-Q-learning/13286774721342762.jpeg" alt="13286774721342762"></p>
+<p>我们认为这两种情况是完全不同的：在右侧图示的情况下，球是靠近对手的，所以我们可以放松，等对手击球。然而，左侧图示的情况，假设球从左向右移动，球就向我们这边移动，所以我们需要快速移动球拍击球以避免丢分。而这只是$10^{70802}$种可能情况中的两种，但我们希望智能体以不同的方式处理它们。</p>
+<p>我们可以使用一个非线性映射把状态和动作映射到一个值上。在机器学习中，这被称为“回归问题”。正如“Deep Q-Learning”其名，使用深度神经网络是最流行的选择之一，特别是在处理图像表示的观测结果时。考虑到这一点，我们对Q-learning算法进行修改：</p>
+<ol>
+<li><p>初始化$Q(s,a)$，注意，此时不是简单的初始化为0，而是采用深度学习的初始化方法</p>
+</li>
+<li><p>从环境中获得$(s,a,r,s’)$</p>
+</li>
+<li><p>等一个episode结束，计算损失函数</p>
+<script type="math/tex; mode=display">
+\mathcal{L}=(Q(s,a)-r)^2</script><p>或者</p>
+<script type="math/tex; mode=display">
+\mathcal{L}=\left(Q(s,a)-\left(r+\gamma\max_{a'\in A}Q_{s',a'}\right)\right)^2</script></li>
+<li><p>使用随机梯度下降算法更新网络参数，进而更新$Q(s,a)$</p>
+</li>
+<li>检验收敛条件，如果不满足，回到第2步</li>
+</ol>
+<p>这个算法看起来很简单，但它的效果不是很好。我们来分析一下原因。</p>
+<h3 id="与环境的交互"><a href="#与环境的交互" class="headerlink" title="与环境的交互"></a>与环境的交互</h3><p>首先，我们需要与环境交互，以获得要训练的数据。在简单的环境中，比如FrozenLake，我们可以随机采取action，但这是最好的策略吗？Atari Pong环境中通过随机移动球拍得分的概率是多少？它不是零，但它非常小，这意味着我们需要等待很长时间才能出现如此罕见的情况。还有一种替代方案，我们可以使用Q函数近似作为action的来源（就像我们之前在value-iteration方法中利用TES_EPISODE经验时的行为一样）。</p>
+<p>如果Q函数“好”的，那么智能体从环境中获得的经验可以用于训练。然而，当Q函数的近似不“好”时（例如在训练开始时），我们就遇到了麻烦。在这种情况下，智能体可能会卡在某些状态的动作，而不会试图采取不同的动作。这就是我们最初谈到的<em>exploration v.s. exploitation</em>的矛盾。所以，在训练开始时随机行为更好，因为它提供了关于环境状态的更均匀分布的信息。随着我们训练的进行，随机行为变得效率低下，这时采用Q函数来决定如何行动。</p>
+<p>有一种<strong>epsilon-greedy</strong>方法组合了随机和Q函数的方法，它使用概率超参数$\epsilon$在随机策略和Q函数策略之间进行切换。通过改变$\epsilon$，我们可以选择随机动作的比率。通常的做法是从$\epsilon=1.0$（完全随机操作）开始，然后慢慢地将其降低较小的值，如$5\%$或$2\%$的随机操作。<em>exploration v.s. exploitation</em>的矛盾还有其他解决方案，这个问题是RL的一个的开放问题，也是一个活跃的研究领域，至今还没有完全得到解决。</p>
+<h3 id="SGD优化"><a href="#SGD优化" class="headerlink" title="SGD优化"></a>SGD优化</h3><p>我们试图用一个神经网络来近似一个复杂的非线性函数Q(s，a)。但是SGD优化的一个基本要求是训练数据是独立同分布的(<strong>independent and identically distributed</strong>通常缩写为<strong>i.i.d.</strong>)。而在我们的例子中：</p>
+<ol>
+<li>样本不独立。即使我们积累了大量的数据样本，它们也会非常接近，因为它们属于同一episode。</li>
+<li>训练数据的分布与想要学习的最优策略的分布不完全相同。训练数据是其他策略的结果（如epsilon-greedy），但我们想要一个有最佳reward的最佳策略。</li>
+</ol>
+<p>为了解决这些问题，我们需要使用过去的经验，并从中采样训练数据，而不是使用最新经验。这种方法被称为<strong>replay buffer</strong>。最简单的实现是一个固定大小的缓冲队列，并在队列的末端添加新的数据，以便将旧数据出队。replay buffer可以对最新的policy采样的数据进行训练。</p>
+<h3 id="每次迭代之间的相关性"><a href="#每次迭代之间的相关性" class="headerlink" title="每次迭代之间的相关性"></a>每次迭代之间的相关性</h3><p>还有一个与非i.i.d数据有关的问题。Bellman方程通过$Q(s’,a’)$得到$Q(s,a)$（这个过程称为<em>bootstrapping</em>）。然而，两个state之间只有一个step，这使得它们非常相似（因为状态是连续的），而神经网络（以下简称NN）很难区分它们。当我们更新NN的参数，使$Q(s,a)$更接近期望的结果时，$Q(s’,a’)$和附近其他状态的价值也被间接的改变了，这可能会使训练非常不稳定，就像猫咪追赶自己的尾巴一样：当更新$Q(s,a)$时，可能会发现$Q(s’,a’)$变得更糟，但试图更新$Q(s’,a’)$时$Q(s,a)$又不行了，以此类推。</p>
+<p>有一个技巧可以使训练更稳定，叫做目标网络（<strong>target network</strong>），target network保留网络的副本，并用它作为贝尔曼方程中的$Q(s’,a’)$值。这个网络只周期性地与主网络同步，例如，每$N$步同步一次（$N$通常是一个相当大的超参数，如1k或10k个steps）。</p>
+<h3 id="马尔科夫性"><a href="#马尔科夫性" class="headerlink" title="马尔科夫性"></a>马尔科夫性</h3><p>假设环境服从Markov性：只需有环境的观察就能得知最佳action。（换句话说，不同的observation可以区分不同的state）</p>
+<p>而从之前Atari Pong游戏的截图可以看到，游戏中的一张图片不足以捕捉所有重要的信息（只有一张图片，我们不知道物体的速度和方向）。这显然违反了Markov性，我们将单帧Atari Pong游戏划分到部分可观测的马尔可夫决策过程（<strong>partially observable MDPs，POMDPs</strong>）中。POMDP一般是没有马尔可夫性的，它在实践中非常重要。例如纸牌游戏中你看不到对手的牌，这就是POMDP。</p>
+<h3 id="最终版DQN"><a href="#最终版DQN" class="headerlink" title="最终版DQN"></a>最终版DQN</h3><p>研究人员发现了很多使DQN训练更加稳定和高效的技巧，这里要介绍的是Deep Mind基于epsilon-greedy, replay buffer和target network方法成功地训练了49款Atari游戏上的DQN。</p>
+<ol>
+<li>Mnih, Volodymyr, et al. “Playing atari with deep reinforcement learning.” arXiv preprint arXiv:1312.5602 (2013).</li>
+<li>Mnih, Volodymyr, et al. “Human-level control through deep reinforcement learning.” <em>nature</em> 518.7540 (2015): 529-533.</li>
+</ol>
+<p>下面给出了DQN的算法流程：</p>
+<ol>
+<li><p>随机初始化$Q$和$\hat{Q}$网络权重，$\epsilon\leftarrow 1$，清空缓冲队列</p>
+</li>
+<li><p>根据概率$\epsilon$选择动作$a$，要么是随机action，要么是$\arg\max_{a}Q(s, a)$</p>
+</li>
+<li><p>在环境中执行动作并得到奖励$r$，下一状态$s’$</p>
+</li>
+<li><p>在replay buffer中储存状态转移元组$(s, a, r, s’)$</p>
+</li>
+<li><p>从replay buffer中随机采样小批量状态转移元组</p>
+</li>
+<li><p>计算</p>
+<script type="math/tex; mode=display">
+y=\left\{ \begin{array}{l}
+    r,\,\,episode\text{结束}\\
+    r+\gamma \max_{a'\in A}\hat{Q}\left( s',a' \right) ,\,\,\text{其他}\\
+\end{array} \right.</script></li>
+<li><p>计算loss：$\mathcal{L}=(Q(s,a)-y)^2$</p>
+</li>
+<li>SGD更新$Q$网络参数</li>
+<li>没N个steps之后，把$Q$的权重拷贝给$\hat{Q}$</li>
+<li>重复第2步</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/15/4-2-Tabular-Q-learning/" rel="prev" title="4.2 Tabular Q-learning">
+      <i class="fa fa-chevron-left"></i> 4.2 Tabular Q-learning
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8E%E7%8E%AF%E5%A2%83%E7%9A%84%E4%BA%A4%E4%BA%92"><span class="nav-number">1.</span> <span class="nav-text">与环境的交互</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SGD%E4%BC%98%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text">SGD优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%8F%E6%AC%A1%E8%BF%AD%E4%BB%A3%E4%B9%8B%E9%97%B4%E7%9A%84%E7%9B%B8%E5%85%B3%E6%80%A7"><span class="nav-number">3.</span> <span class="nav-text">每次迭代之间的相关性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A9%AC%E5%B0%94%E7%A7%91%E5%A4%AB%E6%80%A7"><span class="nav-number">4.</span> <span class="nav-text">马尔科夫性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E7%89%88DQN"><span class="nav-number">5.</span> <span class="nav-text">最终版DQN</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">cxw</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cjamessmith" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;cjamessmith" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xwc@zju.edu.cn" title="E-Mail → mailto:xwc@zju.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">cxw</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
