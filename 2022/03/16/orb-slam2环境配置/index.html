@@ -20,21 +20,19 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="交叉熵（cross-entropy）是model-free，policy-based，on-policy的强化学习方法。也就是说：">
+  <meta name="description" content="可以用pangolin最新版（当前最新0.6） 原有库有些语法不符合C++最新规范，使用另一个(库)[https:&#x2F;&#x2F;github.com&#x2F;craymichael&#x2F;ORB_SLAM2]。 编译前将C++标准换成C++14：运行命令sed -i &#39;s&#x2F;++11&#x2F;++14&#x2F;g&#39; CMakeLists.txt 报错Pangolin could not be found because">
 <meta property="og:type" content="article">
-<meta property="og:title" content="2.2 cross-entropy">
-<meta property="og:url" content="http://example.com/2022/01/13/2-2-cross-entropy/index.html">
+<meta property="og:title" content="orb-slam2环境配置">
+<meta property="og:url" content="http://example.com/2022/03/16/orb-slam2%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/index.html">
 <meta property="og:site_name" content="CXW&#39;s Blog">
-<meta property="og:description" content="交叉熵（cross-entropy）是model-free，policy-based，on-policy的强化学习方法。也就是说：">
+<meta property="og:description" content="可以用pangolin最新版（当前最新0.6） 原有库有些语法不符合C++最新规范，使用另一个(库)[https:&#x2F;&#x2F;github.com&#x2F;craymichael&#x2F;ORB_SLAM2]。 编译前将C++标准换成C++14：运行命令sed -i &#39;s&#x2F;++11&#x2F;++14&#x2F;g&#39; CMakeLists.txt 报错Pangolin could not be found because">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2022/01/13/2-2-cross-entropy/13286520211928528.png">
-<meta property="article:published_time" content="2022-01-13T07:03:01.000Z">
-<meta property="article:modified_time" content="2022-01-15T13:17:24.447Z">
+<meta property="article:published_time" content="2022-03-16T10:16:52.000Z">
+<meta property="article:modified_time" content="2022-03-16T10:24:42.123Z">
 <meta property="article:author" content="cxw">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2022/01/13/2-2-cross-entropy/13286520211928528.png">
 
-<link rel="canonical" href="http://example.com/2022/01/13/2-2-cross-entropy/">
+<link rel="canonical" href="http://example.com/2022/03/16/orb-slam2%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">
 
 
 <script id="page-configurations">
@@ -47,7 +45,7 @@
   };
 </script>
 
-  <title>2.2 cross-entropy | CXW's Blog</title>
+  <title>orb-slam2环境配置 | CXW's Blog</title>
   
 
 
@@ -157,7 +155,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/2-2-cross-entropy/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/16/orb-slam2%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -170,7 +168,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          2.2 cross-entropy
+          orb-slam2环境配置
         </h1>
 
         <div class="post-meta">
@@ -179,23 +177,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2022-01-13 15:03:01" itemprop="dateCreated datePublished" datetime="2022-01-13T15:03:01+08:00">2022-01-13</time>
+              <time title="Created: 2022-03-16 18:16:52 / Modified: 18:24:42" itemprop="dateCreated datePublished" datetime="2022-03-16T18:16:52+08:00">2022-03-16</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-01-15 21:17:24" itemprop="dateModified" datetime="2022-01-15T21:17:24+08:00">2022-01-15</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/reinforcement-learning/" itemprop="url" rel="index"><span itemprop="name">reinforcement_learning</span></a>
+                  <a href="/categories/%E6%97%A5%E5%B8%B8%E8%B8%A9%E5%9D%91/" itemprop="url" rel="index"><span itemprop="name">日常踩坑</span></a>
                 </span>
             </span>
 
@@ -210,39 +202,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>﻿﻿交叉熵（cross-entropy）是<strong>model-free，policy-based，on-policy</strong>的强化学习方法。也就是说：</p>
-<span id="more"></span>
-<ul>
-<li>不对环境建模</li>
-<li>估计智能体的策略</li>
-<li>需要从环境中获得新的数据 </li>
-</ul>
-<p>我们举个例子，注意不同episode的$o_i,a_i,r_i$是不同的，为了简单起见，取$\gamma=1$<br><img src="/2022/01/13/2-2-cross-entropy/13286520211928528.png" alt="13286520211928528"><br>每一个单元格都代表了智能体在episode中的每一步。由于环境的随机性和智能体根据概率分布抽样选择动作的方式，某些episode会比其他的更好。cross-entropy的核心是扔掉不好的episode，然后训练出更好的。步骤如下：</p>
-<ol>
-<li>在环境中跑N个episode</li>
-<li>计算每个episode的总奖励，并确定奖励边界，通常，我们把奖励边界定义为episode奖励排名的50%或70%</li>
-<li>抛弃所有奖励在边界值以下的episode</li>
-<li>使用剩余的episode训练神经网</li>
-<li>从第1步重新开始，直到结果令我们满意为止</li>
+        <ol>
+<li>可以用pangolin最新版（当前最新<code>0.6</code>）</li>
+<li>原有库有些语法不符合C++最新规范，使用另一个(库)[<a target="_blank" rel="noopener" href="https://github.com/craymichael/ORB_SLAM2]。">https://github.com/craymichael/ORB_SLAM2]。</a></li>
+<li>编译前将C++标准换成C++14：运行命令<code>sed -i &#39;s/++11/++14/g&#39; CMakeLists.txt</code></li>
+<li>报错<code>Pangolin could not be found because dependency Eigen3 could not be found</code>：把<code>CMakeLists.txt</code>中的<code>find_package(Eigen3 3.1.0 REQUIRED)</code>改成<code>find_package(Eigen3 3.1.0 REQUIRED NO_MODULE)</code></li>
+<li><code>usleep</code>相关的报错：在相关文件中包含头文件<code>#include &lt;unistd.h&gt;</code></li>
 </ol>
-<p>这就是cross-entropy方法的描述。神经网络学习如何重复动作，从而获得更大的回报，不断地将边界变得越来越高。尽管这种方法简单，但它在简单环境中表现良好，易于实现，并且对超参数变化非常鲁棒，是一种理想的baseline方法。</p>
-<blockquote>
-<p>可以尝试一下用cross-entropy方法解决gym中CartPole-v0这个环境的控制问题</p>
-</blockquote>
-<h2 id="cross-entropy方法的数学原理"><a href="#cross-entropy方法的数学原理" class="headerlink" title="cross-entropy方法的数学原理"></a>cross-entropy方法的数学原理</h2><p>cross-entropy的基础是<strong>重要性采样定理（importance sampling theorem）</strong>：</p>
-<script type="math/tex; mode=display">
-\mathbb{E}_{x\sim p\left( x \right)}\left[ H\left( x \right) \right] =\int_x{p\left( x \right) H\left( x \right) dx}=\int_x{q\left( x \right) \frac{p\left( x \right)}{q\left( x \right)}H\left( x \right) dx}=\mathbb{E}_{x\sim q\left( x \right)}\left[ \frac{p\left( x \right)}{q\left( x \right)}H\left( x \right) \right]</script><p>在RL中，$H(x)$是通过某种策略$x$获得的奖励值，$p(x)$是所有policy的概率分布。我们不想通过搜索所有可能的策略来最大化return；相反，我们采用这样的方法：用$q(x)$近似$p(x)H(x)$，找到一个最佳的$q(x)$使return最大化，这个时候的$q(x)$就是我们所需要的policy。</p>
-<p>那怎么刻画$q(x)$近似$p(x)H(x)$的程度呢？可以用<strong>Kullback-Leibler（KL）散度</strong>刻画两个概率分布的距离，如下所示：</p>
-<script type="math/tex; mode=display">
-KL\left( p_1\left( x \right) ||p_2\left( x \right) \right) =\mathbb{E}_{x\sim p_1\left( x \right)}\left[ \ln \frac{p_1\left( x \right)}{p_2\left( x \right)} \right] =\mathbb{E}_{x\sim p_1\left( x \right)}\left[ \ln p_1\left( x \right) \right] -\mathbb{E}_{x\sim p_1\left( x \right)}\left[ \ln p_2\left( x \right) \right]</script><p>我们现在要对这个函数进行优化，注意优化变量是$p_2(x)$。KL的第一项称为<strong>熵</strong>，它与$p_2(x)$无关，在优化过程中可以忽略。第二项称为<strong>交叉熵（cross-entropy）</strong>，这是深度学习中非常常见的优化目标。</p>
-<blockquote>
-<p>其实交叉熵就是</p>
-<script type="math/tex; mode=display">-真值*ln(估计值)</script></blockquote>
-<p>结合这两个公式，我们可以得到一个迭代算法，不断将$q(x)$逼近$p(x)H(x)$</p>
-<script type="math/tex; mode=display">
-q_{i+1}\left( x \right) =\underset{q_{i+1}\left( x \right)}{\arg\min}-\mathbb{E}_{x\sim q_i\left( x \right)}\frac{p\left( x \right)}{q_i\left( x \right)}H\left( x \right) \ln q_{i+1}\left( x \right)</script><p>这种优化方法是一种通用的cross-entropy，但是放在RL中，可以大大简化这个式子，首先，待优化的$q(x)$就是$\pi \left( a|s \right)$，$H(x)$更是可以简化成指示函数：reward大于阈值返回1，否则返回0。于是迭代算法简化成：</p>
-<script type="math/tex; mode=display">
-\pi _{i+1}\left( a|s \right) =\underset{\pi_{i+1}}{\arg\min}-\mathbb{E}_{z\sim \pi_i\left( a|s \right)}\left[ R(z) > \psi_i \right] \ln \pi _{i+1}\left( a|s \right)</script><p>严格地说，公式中的所有概率分布函数还应满足概率的公理，但是在我们写程序的时候softmax函数已经帮我们解决了这个问题。</p>
 
     </div>
 
@@ -258,13 +224,10 @@ q_{i+1}\left( x \right) =\underset{q_{i+1}\left( x \right)}{\arg\min}-\mathbb{E}
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/01/13/2-1-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%88%86%E7%B1%BB/" rel="prev" title="2.1 强化学习分类">
-      <i class="fa fa-chevron-left"></i> 2.1 强化学习分类
+    <a href="/2022/01/17/4-4-DQN-on-Pong/" rel="prev" title="4.4 DQN on Pong">
+      <i class="fa fa-chevron-left"></i> 4.4 DQN on Pong
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2022/01/13/2-3-CartPole-v0%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/" rel="next" title="2.3 CartPole-v0使用cross-entropy方法">
-      2.3 CartPole-v0使用cross-entropy方法 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -323,7 +286,6 @@ q_{i+1}\left( x \right) =\underset{q_{i+1}\left( x \right)}{\arg\min}-\mathbb{E}
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#cross-entropy%E6%96%B9%E6%B3%95%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">cross-entropy方法的数学原理</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -436,59 +398,6 @@ q_{i+1}\left( x \right) =\underset{q_{i+1}\left( x \right)}{\arg\min}-\mathbb{E}
   
 
   
-      
-
-<script>
-  if (typeof MathJax === 'undefined') {
-    window.MathJax = {
-      loader: {
-        source: {
-          '[tex]/amsCd': '[tex]/amscd',
-          '[tex]/AMScd': '[tex]/amscd'
-        }
-      },
-      tex: {
-        inlineMath: {'[+]': [['$', '$']]},
-        tags: 'ams'
-      },
-      options: {
-        renderActions: {
-          findScript: [10, doc => {
-            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-              const display = !!node.type.match(/; *mode=display/);
-              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-              const text = document.createTextNode('');
-              node.parentNode.replaceChild(text, node);
-              math.start = {node: text, delim: '', n: 0};
-              math.end = {node: text, delim: '', n: 0};
-              doc.math.push(math);
-            });
-          }, '', false],
-          insertedScript: [200, () => {
-            document.querySelectorAll('mjx-container').forEach(node => {
-              let target = node.parentNode;
-              if (target.nodeName.toLowerCase() === 'li') {
-                target.parentNode.classList.add('has-jax');
-              }
-            });
-          }, '', false]
-        }
-      }
-    };
-    (function () {
-      var script = document.createElement('script');
-      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
-      script.defer = true;
-      document.head.appendChild(script);
-    })();
-  } else {
-    MathJax.startup.document.state(0);
-    MathJax.texReset();
-    MathJax.typeset();
-  }
-</script>
-
-    
 
   
 
