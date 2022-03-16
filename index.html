@@ -150,6 +150,85 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/17/4-4-DQN-on-Pong/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="cxw">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CXW's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/17/4-4-DQN-on-Pong/" class="post-title-link" itemprop="url">4.4 DQN on Pong</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-01-17 09:18:28 / Modified: 23:41:57" itemprop="dateCreated datePublished" datetime="2022-01-17T09:18:28+08:00">2022-01-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/reinforcement-learning/" itemprop="url" rel="index"><span itemprop="name">reinforcement_learning</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="包装器（Wrapper）"><a href="#包装器（Wrapper）" class="headerlink" title="包装器（Wrapper）"></a>包装器（Wrapper）</h3><p>Atari游戏需要经过一定处理才能当作强化学习环境，包装器可以对Atari游戏做一定操作使之成为强化学习环境，这些操作包括：</p>
+<ol>
+<li>将游戏中的“命”转换成episode。一般来说，一个episode包含了从游戏开始到游戏结束屏幕出现的所有帧。通常，在街机游戏中，玩家有好几条“命”，wrapper把玩家的每一条命转换成一个episode。并不是所有的游戏都有好几条命，例如Pong就没有。</li>
+<li>在游戏开始前执行一些与游戏本身无关的操作。比如跳过游戏介绍介绍等。</li>
+<li>每隔$K$步做一次决策，其中$K$通常是$4$或$3$。连续$K$帧中，重复决策的action。这可以加快训练速度，因为使用神经网络处理每一帧的计算开销都很大。</li>
+<li>取最后两帧中每个像素的最大值作为observation。由于当初Atari平台的局限性，一些Atari游戏会出现闪烁（雅达利能在一帧上显示的对象数量有限）。对于人眼来说是看不到这种快速的变化的，但对NN来说，这就是噪声。</li>
+<li>在游戏开始时按下“Fire”键。有些游戏（包括Pong和Breakout）需要用户按下“Fire”键来开始游戏。不然由于环境是POMDP，从observation中，智能体不能判断“Fire”键是否已经被按下了。</li>
+<li>将每一帧RGB图片从$210×160$缩小到灰度$84×84$。DeepMind的方法是从YCbCr颜色空间中提取Y通道，然后将整个图像重新缩放到$84×84$。也有研究人员进行灰度变换，裁剪图像中不相关的部分，然后缩小比例。</li>
+<li>将几帧（通常是$4$帧）图像打包到一起，以提供关于游戏的动态信息。</li>
+<li>将奖励归一化到$[-1,1]$区间。不同游戏的reward机制不同。例如，在Pong中，每传一次球，就会得1分。然而在KungFuMaster中，每杀死敌人会得到100分。这种reward的分布使得在一组游戏中难以找到共同的超参数。</li>
+<li>将observation从<code>unsigned</code>转换为<code>float32</code>。从模拟器屏幕获得的图像是从0到255的<code>tensor</code>，我们需要将值归一化到$[0.0,1.0]$。</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/16/4-3-Deep-Q-learning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -860,87 +939,6 @@ Q\left(s, a\right) = r\left(s, a\right) + \gamma V\left(s'\right)=r\left(s, a\ri
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="cxw">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CXW's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">2.4 FrozenLake使用cross-entropy方法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2022-01-13 15:09:27" itemprop="dateCreated datePublished" datetime="2022-01-13T15:09:27+08:00">2022-01-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-01-15 21:17:24" itemprop="dateModified" datetime="2022-01-15T21:17:24+08:00">2022-01-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/reinforcement-learning/" itemprop="url" rel="index"><span itemprop="name">reinforcement_learning</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>﻿﻿<a target="_blank" rel="noopener" href="https://gym.openai.com/envs/FrozenLake-v0/">FrozenLake</a>是gym的另一个grid world环境。其环境简单的栅格地图，有四种栅格状态，分别用字母SFHG表示，下面是一个地图的例子：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/13/2-4-FrozenLake%E4%BD%BF%E7%94%A8cross-entropy%E6%96%B9%E6%B3%95/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1010,7 +1008,7 @@ Q\left(s, a\right) = r\left(s, a\right) + \gamma V\left(s'\right)=r\left(s, a\ri
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
