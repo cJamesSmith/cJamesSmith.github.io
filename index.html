@@ -175,7 +175,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-03-16 18:16:52 / Modified: 18:24:42" itemprop="dateCreated datePublished" datetime="2022-03-16T18:16:52+08:00">2022-03-16</time>
+              <time title="Created: 2022-03-16 18:16:52 / Modified: 18:38:20" itemprop="dateCreated datePublished" datetime="2022-03-16T18:16:52+08:00">2022-03-16</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -200,7 +200,7 @@
       
           <ol>
 <li>可以用pangolin最新版（当前最新<code>0.6</code>）</li>
-<li>原有库有些语法不符合C++最新规范，使用另一个(库)[<a target="_blank" rel="noopener" href="https://github.com/craymichael/ORB_SLAM2]。">https://github.com/craymichael/ORB_SLAM2]。</a></li>
+<li>原有库有些语法不符合C++最新规范，使用另一个<a target="_blank" rel="noopener" href="https://github.com/craymichael/ORB_SLAM2">库</a>。</li>
 <li>编译前将C++标准换成C++14：运行命令<code>sed -i &#39;s/++11/++14/g&#39; CMakeLists.txt</code></li>
 <li>报错<code>Pangolin could not be found because dependency Eigen3 could not be found</code>：把<code>CMakeLists.txt</code>中的<code>find_package(Eigen3 3.1.0 REQUIRED)</code>改成<code>find_package(Eigen3 3.1.0 REQUIRED NO_MODULE)</code></li>
 <li><code>usleep</code>相关的报错：在相关文件中包含头文件<code>#include &lt;unistd.h&gt;</code></li>
